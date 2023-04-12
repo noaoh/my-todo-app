@@ -136,7 +136,6 @@ const parseTodoTxt = (string) => {
             const match = findMatch(parseState["rest"], token);
             const { matchType, ...rest } = match;
             matchTypeState = matchType;
-            console.log(matchType);
             result = parseReducers[matchType](result, rest);
         }
         i += 1;
