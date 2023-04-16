@@ -1,6 +1,10 @@
-import { VIEW_STATES } from "../constants.js";
-import { parseTodoTxt } from "./parser.js";
+import { MATCH_TYPES, VIEW_STATES } from "../constants.js";
+import { findMatch, parseTodoTxt } from "./parser.js";
+import { format, startOfToday } from "date-fns";
 
+const isoTodayDate = () => {
+    return format(startOfToday(), "yyyy-MM-dd");
+};
 
 class TodoModel {
     constructor(todoObj) {
@@ -22,11 +26,48 @@ class TodoModel {
         return new TodoModel({ ...parsedString, raw: string, id: id });
     }
 
+    setCreationDate() {
+        const creationDate = isoTodayDate();
+        const states = [ MATCH_TYPES.COMPLETED, MATCH_TYPES.PRIORITY, MATCH_TYPES.COMPLETION_DATE ];
+        let tokens = this.raw.split(" ");
+        let insertionPoint = 0;
+        while (findMatch(states, tokens[insertionPoint]) !== false) {
+            insertionPoint += 1;
+        }
+        tokens.splice(insertionPoint, 0, creationDate);
+        const newRaw = tokens.join(" ");
+        return new TodoModel({ ...this, raw: newRaw, creationDate });
+    }
+
     setCompleted(completeValue) {
         if (completeValue === true) {
-            return new TodoModel({ ...this, completed: completeValue, raw: "x " + this.raw });
+            const completionDate = isoTodayDate();
+            const states = [ MATCH_TYPES.COMPLETED, MATCH_TYPES.PRIORITY ];
+            let tokens = ["x", ...this.raw.split(" ")];
+            let insertionPoint = 0;
+            while (findMatch(states, tokens[insertionPoint]) !== false) {
+                insertionPoint += 1;
+            }
+            tokens.splice(insertionPoint, 0, completionDate);
+            const newRaw = tokens.join(" ");
+            return new TodoModel({ ...this, completionDate, completed: completeValue, raw: newRaw });
         } else if (completeValue === false) {
-            return new TodoModel({ ...this, completed: completeValue, raw: this.raw.slice(2) });
+            const states = [ MATCH_TYPES.COMPLETED, MATCH_TYPES.COMPLETION_DATE ];
+            const tokens = this.raw.split(" ");
+            let completionDateFound = false;
+            const newTokens = tokens.filter((token) => {
+                const { matchType } = findMatch(states, token);
+                if (matchType === MATCH_TYPES.COMPLETION_DATE && !completionDateFound) {
+                    completionDateFound = true;
+                    return false;
+                } else if (matchType === MATCH_TYPES.COMPLETED) {
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+            const newRaw = newTokens.join(" ");
+            return new TodoModel({ ...this, completed: completeValue, raw: newRaw });
         } else {
             throw new Error("completeValue must be a boolean");
         }
@@ -100,4 +141,4 @@ class TodoListModel {
     }
 }
 
-export { TodoModel, TodoListModel };
+export { isoTodayDate, TodoModel, TodoListModel };
