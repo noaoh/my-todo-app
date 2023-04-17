@@ -1,4 +1,4 @@
-import { initialTodoState, MATCH_TYPES } from "../constants";
+import { initialTodoState, onlyOneMatchTypes, MATCH_TYPES } from "../constants";
 
 const parseReducers = {
     [MATCH_TYPES.COMPLETED]: (state, action) => {
@@ -97,7 +97,7 @@ const parseMatchers = {
 }
 
 const parseState = {
-    0: [ MATCH_TYPES.COMPLETED, MATCH_TYPES.PRIORITY, MATCH_TYPES.COMPLETION_DATE, MATCH_TYPES.CREATION_DATE, MATCH_TYPES.CONTEXT, MATCH_TYPES.PROJECT, MATCH_TYPES.EXTRA, MATCH_TYPES.TEXT ],
+    0: [ MATCH_TYPES.COMPLETED, MATCH_TYPES.PRIORITY, MATCH_TYPES.COMPLETION_DATE, MATCH_TYPES.CONTEXT, MATCH_TYPES.PROJECT, MATCH_TYPES.EXTRA, MATCH_TYPES.TEXT ],
     1: [ MATCH_TYPES.PRIORITY, MATCH_TYPES.COMPLETION_DATE, MATCH_TYPES.CREATION_DATE, MATCH_TYPES.CONTEXT, MATCH_TYPES.PROJECT, MATCH_TYPES.EXTRA, MATCH_TYPES.TEXT ],
     2: [ MATCH_TYPES.COMPLETION_DATE, MATCH_TYPES.CREATION_DATE, MATCH_TYPES.CONTEXT, MATCH_TYPES.PROJECT, MATCH_TYPES.EXTRA, MATCH_TYPES.TEXT ],
     3: [ MATCH_TYPES.CREATION_DATE, MATCH_TYPES.CONTEXT, MATCH_TYPES.PROJECT, MATCH_TYPES.EXTRA, MATCH_TYPES.TEXT ],
@@ -115,32 +115,35 @@ const findMatch = (matchers, token) => {
     return false;
 }
 
+const filterOutStates = (parseState, foundStates) => {
+    return parseState.filter((t) => !foundStates.includes(t));
+}
+
 const parseTodoTxt = (string) => {
     let result = initialTodoState;
     const tokens = string.split(" ");
     let i = 0;
-    let matchTypeState = "";
+    let exclusiveMatches = [];
+    let currentMatchType = "";
     while (i < tokens.length) {
         const token = tokens[i];
-        if (matchTypeState === "") {
-            const match = findMatch(parseState[0], token);
+        if (!parseState["rest"].includes(currentMatchType) && i < 4) {
+            const match = findMatch(filterOutStates(parseState[i], exclusiveMatches), token);
             const { matchType, ...rest } = match;
-            matchTypeState = matchType;
-            result = parseReducers[matchType](result, rest);
-        } else if (!parseState["rest"].includes(matchTypeState) && i < 4) {
-            const match = findMatch(parseState[i], token);
-            const { matchType, ...rest } = match;
-            matchTypeState = matchType;
-            result = parseReducers[matchType](result, rest);
+            if (onlyOneMatchTypes.includes(matchType)) {
+                exclusiveMatches.push(matchType);
+            }
+            currentMatchType = matchType;
+            result = parseReducers[currentMatchType](result, rest);
         } else {
             const match = findMatch(parseState["rest"], token);
             const { matchType, ...rest } = match;
-            matchTypeState = matchType;
-            result = parseReducers[matchType](result, rest);
+            currentMatchType = matchType;
+            result = parseReducers[currentMatchType](result, rest);
         }
         i += 1;
     }
     return result;
 }
 
-export { parseMatchers, parseState, findMatch, parseReducers, parseTodoTxt };
+export { filterOutStates, parseMatchers, parseState, findMatch, parseReducers, parseTodoTxt };

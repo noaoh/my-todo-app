@@ -1,5 +1,5 @@
 import { describe, it } from "vitest";
-import { parseReducers, parseMatchers, parseState, parseTodoTxt } from "../parser";
+import { parseReducers, parseMatchers, parseState, parseTodoTxt, filterByCompletionDate, filterOutStates } from "../parser";
 import { initialTodoState, MATCH_TYPES } from "../../constants";
 
 describe("parser", () => {
@@ -257,6 +257,39 @@ describe("parser", () => {
             const result = parseMatchers.text("+meow");
             expect(result).toBe(false);
         });
+    });
+
+    describe("filterOutStates", () => {
+        it("should not filter any state out if array is empty", ({ expect }) => {
+            const input = [ MATCH_TYPES.COMPLETED, MATCH_TYPES.PRIORITY, MATCH_TYPES.COMPLETION_DATE ];
+            const found = [];
+            const result = filterOutStates(input, found);
+            expect(result).toStrictEqual(input);
+        });
+
+        it("should filter out the state completion date if completion date is present", ({ expect }) => {
+            const input = [ MATCH_TYPES.COMPLETED, MATCH_TYPES.PRIORITY, MATCH_TYPES.COMPLETION_DATE ];
+            const found = [ MATCH_TYPES.COMPLETION_DATE ];
+            const expected = [ MATCH_TYPES.COMPLETED, MATCH_TYPES.PRIORITY ];
+            const result = filterOutStates(input, found);
+            expect(result).toStrictEqual(expected);
+        });
+
+        it("should be able to filter out multiple states", ({ expect }) => {
+            const input = [ MATCH_TYPES.COMPLETED, MATCH_TYPES.PRIORITY, MATCH_TYPES.COMPLETION_DATE ];
+            const found = [ MATCH_TYPES.COMPLETION_DATE, MATCH_TYPES.PRIORITY ];
+            const expected = [ MATCH_TYPES.COMPLETED ];
+            const result = filterOutStates(input, found);
+            expect(result).toStrictEqual(expected);
+        })
+
+        it("should be able to filter out all states", ({ expect }) => {
+            const input = [ MATCH_TYPES.COMPLETED, MATCH_TYPES.PRIORITY, MATCH_TYPES.COMPLETION_DATE ];
+            const found = [ MATCH_TYPES.COMPLETION_DATE, MATCH_TYPES.PRIORITY, MATCH_TYPES.COMPLETED ];
+            const expected = [];
+            const result = filterOutStates(input, found);
+            expect(result).toStrictEqual(expected);
+        })
     });
 
     describe("parseTodoTxt", () => {

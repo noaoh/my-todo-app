@@ -96,6 +96,14 @@ describe("todotxt", () => {
             expect(newTodo.id).toBe(todo.id);
         });
 
+        it("should not set a creation date if one is already present", ({ expect}) => {
+            const input = "x 2023-04-16 2023-04-13 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456";
+            const todo = todotxt.TodoModel.parse(input);
+            const newTodo = todo.setCreationDate();
+            expect(newTodo.creationDate).toBe("2023-04-13");
+            expect(newTodo.raw).toBe("x 2023-04-16 2023-04-13 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456");
+        });
+
         it("should be able to set a creation date if completion, priority and completion date are present", ({ expect}) => {
             const input = "x (A) 2023-04-16 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456";
             const todo = todotxt.TodoModel.parse(input);
@@ -137,7 +145,7 @@ describe("todotxt", () => {
             const listB = listA.addTodo(inputB);
             expect(listB.todos.length).toBe(2);
             expect(listB.todos[0].raw).toBe(inputA);
-            expect(listB.todos[1].raw).toBe(inputB);
+            expect(listB.todos[1].raw).toBe(`2023-04-13 ${inputB}`);
         });
 
         it("should be able to show state", ({ expect }) => {
@@ -161,13 +169,13 @@ describe("todotxt", () => {
             const listC = listB.addTodo(inputC);
             const listD = listC.removeCompleted();
             expect(listD.todos.length).toBe(1);
-            expect(listD.todos[0].raw).toBe(inputC);
+            expect(listD.todos[0].raw).toBe(`2023-04-13 ${inputC}`);
         });
 
         it("should be able to edit todos", ({ expect }) => {
             const inputA = "x (A) 2021-01-01 2021-01-02 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456";
             const inputB = "x (A) 2021-01-01 2021-01-02 yinkel @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456";
-            const inputC = "x (B) meow";
+            const inputC = "x (B) 2021-01-01 2021-01-02 meow";
             const list = new todotxt.TodoListModel([], "\n");
             const listA = list.addTodo(inputA);
             const listB = listA.addTodo(inputB);
@@ -198,7 +206,7 @@ describe("todotxt", () => {
         it("should be able to convert to string", ({ expect }) => {
             const inputA = "x (A) 2021-01-01 2021-01-02 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456";
             const inputB = "x (A) 2021-01-01 2021-01-02 yinkel @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456";
-            const inputC = "meow";
+            const inputC = "x (A) 2023-04-16 2023-04-13 meow";
             const list = new todotxt.TodoListModel([], "\n");
             const listA = list.addTodo(inputA);
             const listB = listA.addTodo(inputB);

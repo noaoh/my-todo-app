@@ -28,15 +28,26 @@ class TodoModel {
 
     setCreationDate() {
         const creationDate = isoTodayDate();
-        const states = [ MATCH_TYPES.COMPLETED, MATCH_TYPES.PRIORITY, MATCH_TYPES.COMPLETION_DATE ];
+        const states = [ MATCH_TYPES.COMPLETED, MATCH_TYPES.PRIORITY, MATCH_TYPES.COMPLETION_DATE, MATCH_TYPES.CREATION_DATE ];
         let tokens = this.raw.split(" ");
         let insertionPoint = 0;
+        let dates = 0;
+
         while (findMatch(states, tokens[insertionPoint]) !== false) {
+            const { matchType } = findMatch(states, tokens[insertionPoint]);
+            if (matchType === MATCH_TYPES.COMPLETION_DATE || matchType === MATCH_TYPES.CREATION_DATE) {
+                dates += 1;
+            }
             insertionPoint += 1;
         }
-        tokens.splice(insertionPoint, 0, creationDate);
-        const newRaw = tokens.join(" ");
-        return new TodoModel({ ...this, raw: newRaw, creationDate });
+
+        if (dates !== 2) {
+            tokens.splice(insertionPoint, 0, creationDate);
+            const newRaw = tokens.join(" ");
+            return new TodoModel({ ...this, raw: newRaw, creationDate });
+        } else {
+            return this;
+        }
     }
 
     setCompleted(completeValue) {
@@ -85,7 +96,7 @@ class TodoListModel {
     }
 
     addTodo(todo) {
-        const parsedTodo = TodoModel.parse(todo);
+        const parsedTodo = TodoModel.parse(todo).setCreationDate();
         return new TodoListModel([...this.todos, parsedTodo ], this.lineEnding);
     }
 

@@ -26,4 +26,6 @@ const initialTodoState = {
     extras: {},
 };
 
-export { initialTodoState, VIEW_STATES, MATCH_TYPES };
+const onlyOneMatchTypes = [ MATCH_TYPES.COMPLETED, MATCH_TYPES.PRIORITY, MATCH_TYPES.COMPLETION_DATE, MATCH_TYPES.CREATION_DATE ]
+
+export { onlyOneMatchTypes, initialTodoState, VIEW_STATES, MATCH_TYPES };
