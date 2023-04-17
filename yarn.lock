@@ -665,6 +665,11 @@ get-func-name@^2.0.0:
   resolved "https://registry.yarnpkg.com/get-func-name/-/get-func-name-2.0.0.tgz#ead774abee72e20409433a066366023dd6887a41"
   integrity sha512-Hm0ixYtaSZ/V7C8FJrtZIuBBI+iSgL+1Aq82zSu8VQNB4S3Gk8e7Qs3VwBDJAhmRZcFqkl3tQu36g/Foh5I5ig==
 
+get-os-name@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/get-os-name/-/get-os-name-1.0.3.tgz#2244af26aa6fb804de9d9b4d7d888b36c3731985"
+  integrity sha512-L8HkxqtGGKFck95zEX7pa/Y7+dqSk5YIKOLUT3gU/xuCNLazMAPghbb1q9STUqsjgDgU3h2lkP4qPJXJrnKGkQ==
+
 globals@^11.1.0:
   version "11.12.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-11.12.0.tgz#ab8795338868a0babd8525758018c2a7eb95c42e"

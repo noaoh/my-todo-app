@@ -1,7 +1,19 @@
 import { useState } from 'react'
+import { isUNIX, isMacOS, isLinux, isIOS, isAndroid } from 'get-os-name';
 import './App.css'
 import { VIEW_STATES } from './constants'
 import { TodoListModel } from './models/todotxt';
+
+function getOsLineEndings() {
+  // UNIX operating systems use '\n' to end a line
+  // Windows and other operating systems use '\r\n' to end a line
+  // This matters for the output of our todo.txt file
+  if (isUNIX() || isMacOS() | isLinux() || isIOS() || isAndroid()) {
+    return "\n";
+  } else {
+    return "\r\n";
+  }
+}
 
 function TodoItem(props) {
   const { id, raw, completed, onTodoCheckboxChange, onTodoTextInputChange } = props;
@@ -28,9 +40,10 @@ function TodoList(props) {
   );
 }
 
+const osLineEnding = getOsLineEndings();
 
 function App() {
-  const [todosModel, setTodosModel] = useState(new TodoListModel([], "\n"));
+  const [todosModel, setTodosModel] = useState(new TodoListModel([], osLineEnding));
   const [currentTodo, setCurrentTodo] = useState('');
   const [showState, setShowState] = useState(VIEW_STATES.ALL);
 
