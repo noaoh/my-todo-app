@@ -50,16 +50,19 @@ class TodoModel {
         }
     }
 
-    setCompleted(completeValue) {
+    setCompleted(completeValue, addCompletionDate = true) {
+        let completionDate = undefined;
         if (completeValue === true) {
-            const completionDate = isoTodayDate();
-            const states = [ MATCH_TYPES.COMPLETED, MATCH_TYPES.PRIORITY ];
             let tokens = ["x", ...this.raw.split(" ")];
-            let insertionPoint = 0;
-            while (findMatch(states, tokens[insertionPoint]) !== false) {
-                insertionPoint += 1;
+            if (addCompletionDate) {
+                completionDate = isoTodayDate();
+                const states = [ MATCH_TYPES.COMPLETED, MATCH_TYPES.PRIORITY ];
+                let insertionPoint = 0;
+                while (findMatch(states, tokens[insertionPoint]) !== false) {
+                    insertionPoint += 1;
+                }
+                tokens.splice(insertionPoint, 0, completionDate);
             }
-            tokens.splice(insertionPoint, 0, completionDate);
             const newRaw = tokens.join(" ");
             return new TodoModel({ ...this, completionDate, completed: completeValue, raw: newRaw });
         } else if (completeValue === false) {
@@ -95,8 +98,8 @@ class TodoListModel {
         this.lineEnding = lineEnding;
     }
 
-    addTodo(todo) {
-        const parsedTodo = TodoModel.parse(todo).setCreationDate();
+    addTodo(todo, addCreationDate = true) {
+        const parsedTodo = addCreationDate ? TodoModel.parse(todo).setCreationDate() : TodoModel.parse(todo);
         return new TodoListModel([...this.todos, parsedTodo ], this.lineEnding);
     }
 
@@ -132,10 +135,10 @@ class TodoListModel {
         return new TodoListModel(newList, this.lineEnding);
     }
 
-    toggleTodo(id) {
+    toggleTodo(id, addCompletionDate = true) {
         const newList = this.todos.map((todo) => {
             if (id === todo.id) {
-                return todo.setCompleted(!todo.completed);
+                return todo.setCompleted(!todo.completed, addCompletionDate);
             } else {
                 return todo;
             }

@@ -295,9 +295,18 @@ describe("parser", () => {
     describe("parseTodoTxt", () => {
         const state = initialTodoState;
 
-
         it("should parse a completed task", ({ expect }) => {
             const input = "x asdf";
+            const result = parseTodoTxt(input);
+            expect(result).toStrictEqual({
+                ...state,
+                completed: true,
+                text: "asdf",
+            });
+        });
+
+        it("should parse a task with empty whitespace", ({ expect }) => {
+            const input = " x asdf ";
             const result = parseTodoTxt(input);
             expect(result).toStrictEqual({
                 ...state,

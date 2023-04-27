@@ -46,17 +46,25 @@ function App() {
   const [todosModel, setTodosModel] = useState(new TodoListModel([], osLineEnding));
   const [currentTodo, setCurrentTodo] = useState('');
   const [showState, setShowState] = useState(VIEW_STATES.ALL);
+  const [addCreationDate, setAddCreationDate] = useState(true);
+  const [addCompletionDate, setAddCompletionDate] = useState(true);
 
   function onAddTodo() {
     if (currentTodo.length !== 0) {
-      const newTodos = todosModel.addTodo(currentTodo);
+      const newTodos = todosModel.addTodo(currentTodo, addCreationDate);
       setTodosModel(newTodos);
       setCurrentTodo('');
     }
   }
 
+  function onEnterKey(e) {
+    if (e.key === 'Enter') {
+      onAddTodo();
+    }
+  }
+
   function onTodoCheckboxChange(id) {
-    const newTodos = todosModel.toggleTodo(id);
+    const newTodos = todosModel.toggleTodo(id, addCompletionDate);
     setTodosModel(newTodos);
   }
 
@@ -66,7 +74,7 @@ function App() {
   }
 
   function onTodoTextInputChange(id, text) {
-    const newTodos = todosModel.editTodo(id, text);
+    const newTodos = todosModel.editTodo(id, text, addCompletionDate);
     setTodosModel(newTodos);
   }
 
@@ -80,13 +88,17 @@ function App() {
       <h1>Todos</h1>
       <h2>You currently have {todosModel.notCompleted} todos to complete</h2>
       <div className="card">
-        <input type="text" minLength="1" placeholder="Add your todo" value={currentTodo} onChange={(e) => setCurrentTodo(e.target.value)} />
+        <input type="text" minLength="1" placeholder="Add your todo" value={currentTodo} onKeyUp={onEnterKey} onChange={(e) => setCurrentTodo(e.target.value)} />
         <button onClick={onAddTodo}>Add</button>
         <TodoList showState={showState} todos={todosModel} onTodoCheckboxChange={onTodoCheckboxChange} onTodoTextInputChange={onTodoTextInputChange} />
         <button onClick={onRemoveTodos}>Remove completed todos</button>
         <button onClick={() => setShowState(VIEW_STATES.ALL)}>Show all</button>
         <button onClick={() => setShowState(VIEW_STATES.ACTIVE)}>Show active</button>
         <button onClick={() => setShowState(VIEW_STATES.COMPLETED)}>Show completed</button>
+        <input id="addCreationDate" type="checkbox" checked={addCreationDate} onChange={() => setAddCreationDate(!addCreationDate)} />
+        <label htmlFor="addCreationDate">Add creation date upon todo creation</label>
+        <input id="addCompletionDate" type="checkbox" checked={addCompletionDate} onChange={() => setAddCompletionDate(!addCompletionDate)} />
+        <label htmlFor="addCompletionDate">Add completion date upon todo completion</label>
         <button onClick={exportTodos}>Export</button>
       </div>
     </div>

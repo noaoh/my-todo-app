@@ -121,7 +121,7 @@ const filterOutStates = (parseState, foundStates) => {
 
 const parseTodoTxt = (string) => {
     let result = initialTodoState;
-    const tokens = string.split(" ");
+    const tokens = string.trim().split(" ");
     let i = 0;
     let exclusiveMatches = [];
     let currentMatchType = "";
