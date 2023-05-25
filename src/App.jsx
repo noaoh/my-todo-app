@@ -3,7 +3,8 @@ import FileSaver from 'file-saver';
 import { isUNIX, isMacOS, isLinux, isIOS, isAndroid } from 'get-os-name';
 import './App.css'
 import { VIEW_STATES } from './constants'
-import { TodoListModel } from './models/todotxt';
+import { TodoModel, TodoListModel } from './models/todotxt';
+import { useLocalStorage } from './hooks/useLocalStorage';
 
 function getOsLineEndings() {
   // UNIX operating systems use '\n' to end a line
@@ -43,12 +44,23 @@ function TodoList(props) {
 
 const osLineEnding = getOsLineEndings();
 
+const todoListInitializer = (value) => {
+  const { todos } = value;
+  console.log(todos);
+  const todoList = todos.map((todo) => {
+    return new TodoModel(todo);
+  });
+
+  return new TodoListModel(todoList, osLineEnding);
+}
+
 function App() {
-  const [todosModel, setTodosModel] = useState(new TodoListModel([], osLineEnding));
-  const [currentTodo, setCurrentTodo] = useState('');
-  const [showState, setShowState] = useState(VIEW_STATES.ALL);
-  const [addCreationDate, setAddCreationDate] = useState(true);
-  const [addCompletionDate, setAddCompletionDate] = useState(true);
+  const prefix = 'todotxtapp';
+  const [todosModel, setTodosModel] = useLocalStorage(`${prefix}:todosModel`, { todos: []}, todoListInitializer);
+  const [currentTodo, setCurrentTodo] = useLocalStorage(`${prefix}:currentTodo`, '');
+  const [showState, setShowState] = useLocalStorage(`${prefix}:showState`, VIEW_STATES.ALL);
+  const [addCreationDate, setAddCreationDate] = useLocalStorage(`${prefix}:addCreationDate`, true);
+  const [addCompletionDate, setAddCompletionDate] = useLocalStorage(`${prefix}:addCompletionDate`, true);
 
   function onAddTodo() {
     if (currentTodo.length !== 0) {

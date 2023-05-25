@@ -170,6 +170,14 @@ describe("todotxt", () => {
             const todoString = todo.toString();
             expect(todoString).toBe(input);
         });
+
+        it("should be able to return todo as JSON", ({ expect }) => {
+            const input = "x (A) 2021-01-02 2021-01-01 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456";
+            const todo = todotxt.TodoModel.parse(input);
+            const todoJSON = JSON.stringify(todo);
+            const expectedJSON = `{"id":"${todo.id}","raw":"${input}","completed":true,"priority":"A","creationDate":"2021-01-01","completionDate":"2021-01-02","text":"meow asdf sdf","contexts":["test3","test5"],"projects":["test1","test4","test6"],"extras":{"test1":"123","test2":"456"}}`;
+            expect(JSON.parse(todoJSON)).toStrictEqual(JSON.parse(expectedJSON));
+        });
     });
 
     describe("TodoListModel", () => {
@@ -351,6 +359,16 @@ describe("todotxt", () => {
 
         it('should be able to import todos from a file with \'\r\n\' line endings', ({ expect }) => { 
             const input = '(A) Thank Mom for the meatballs @phone\r\n(B) Schedule Goodwill pickup +GarageSale @phone\r\nPost signs around the neighborhood +GarageSale @GroceryStore Eskimo pies'
+            const list = new todotxt.TodoListModel([], "\r\n");
+            const listA = list.importTodos(input, false);
+            expect(listA.todos.length).toBe(3);
+            expect(listA.todos[0].raw).toBe('(A) Thank Mom for the meatballs @phone');
+            expect(listA.todos[1].raw).toBe('(B) Schedule Goodwill pickup +GarageSale @phone');
+            expect(listA.todos[2].raw).toBe('Post signs around the neighborhood +GarageSale @GroceryStore Eskimo pies');
+        });
+
+        it('should be able to import todos from a file with \'\r\n\' line endings and a trailing newline', ({ expect }) => { 
+            const input = '(A) Thank Mom for the meatballs @phone\r\n(B) Schedule Goodwill pickup +GarageSale @phone\r\nPost signs around the neighborhood +GarageSale @GroceryStore Eskimo pies\r\n'
             const list = new todotxt.TodoListModel([], "\r\n");
             const listA = list.importTodos(input, false);
             expect(listA.todos.length).toBe(3);

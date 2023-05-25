@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import { v4 as uuid } from "uuid";
 import { format, startOfToday } from "date-fns";
 import { MATCH_TYPES, VIEW_STATES } from "../constants.js";
 import { findMatch, parseTodoTxt } from "./parser.js";
@@ -19,7 +19,7 @@ class TodoModel {
         this.projects = projects;
         this.extras = extras;
         this.raw = raw;
-        this.id = id || crypto.randomUUID();
+        this.id = id || uuid();
     }
 
     static parse(string, id) {
@@ -91,6 +91,21 @@ class TodoModel {
     toString() {
         return this.raw;
     };
+
+    toJSON() {
+        return {
+            id: this.id,
+            raw: this.raw,
+            completed: this.completed,
+            priority: this.priority,
+            creationDate: this.creationDate,
+            completionDate: this.completionDate,
+            text: this.text,
+            contexts: this.contexts,
+            projects: this.projects,
+            extras: this.extras,
+        };
+    }
 }
 
 class TodoListModel {
@@ -161,6 +176,12 @@ class TodoListModel {
     
     toString() {
         return this.todos.map((todo) => todo.toString()).join(this.lineEnding) + this.lineEnding;
+    }
+
+    toJSON() {
+        return {
+            todos: this.todos.map((todo) => todo.toJSON()),
+        };
     }
 
     get notCompleted() {
