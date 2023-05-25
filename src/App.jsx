@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import FileSaver from 'file-saver';
 import { isUNIX, isMacOS, isLinux, isIOS, isAndroid } from 'get-os-name';
 import './App.css'
 import { VIEW_STATES } from './constants'
@@ -80,7 +81,8 @@ function App() {
 
   function exportTodos() {
     const todoListString = todosModel.toString();
-    console.log(todoListString);
+    const blob = new Blob([todoListString], {type: 'text/plain'}); 
+    FileSaver.saveAs(blob, 'todo.txt');
   }
 
   return (
