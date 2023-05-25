@@ -94,9 +94,12 @@ function App() {
         <button onClick={onAddTodo}>Add</button>
         <TodoList showState={showState} todos={todosModel} onTodoCheckboxChange={onTodoCheckboxChange} onTodoTextInputChange={onTodoTextInputChange} />
         <button onClick={onRemoveTodos}>Remove completed todos</button>
-        <button onClick={() => setShowState(VIEW_STATES.ALL)}>Show all</button>
-        <button onClick={() => setShowState(VIEW_STATES.ACTIVE)}>Show active</button>
-        <button onClick={() => setShowState(VIEW_STATES.COMPLETED)}>Show completed</button>
+        <label htmlFor="selectShowState">Show todos:</label>
+        <select id="selectShowState" value={showState} onChange={(e) => setShowState(e.target.value)}>
+          <option value={VIEW_STATES.ALL}>Show all</option>
+          <option value={VIEW_STATES.ACTIVE}>Show active</option>
+          <option value={VIEW_STATES.COMPLETED}>Show completed</option>
+        </select>
         <input id="addCreationDate" type="checkbox" checked={addCreationDate} onChange={() => setAddCreationDate(!addCreationDate)} />
         <label htmlFor="addCreationDate">Add creation date upon todo creation</label>
         <input id="addCompletionDate" type="checkbox" checked={addCompletionDate} onChange={() => setAddCompletionDate(!addCompletionDate)} />
