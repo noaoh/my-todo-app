@@ -79,6 +79,17 @@ function App() {
     setTodosModel(newTodos);
   }
 
+  function onImportTodos(e) {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const contents = e.target.result;
+      const newTodos = todosModel.importTodos(contents);
+      setTodosModel(newTodos);
+    };
+    reader.readAsText(file);
+  }
+
   function exportTodos() {
     const todoListString = todosModel.toString();
     const blob = new Blob([todoListString], {type: 'text/plain'}); 
@@ -100,10 +111,13 @@ function App() {
           <option value={VIEW_STATES.ACTIVE}>Show active</option>
           <option value={VIEW_STATES.COMPLETED}>Show completed</option>
         </select>
+        <label htmlFor="addCreationDate">Add creation date upon todo creation </label>
         <input id="addCreationDate" type="checkbox" checked={addCreationDate} onChange={() => setAddCreationDate(!addCreationDate)} />
-        <label htmlFor="addCreationDate">Add creation date upon todo creation</label>
+        <label htmlFor="addCompletionDate">Add completion date upon todo completion </label>
         <input id="addCompletionDate" type="checkbox" checked={addCompletionDate} onChange={() => setAddCompletionDate(!addCompletionDate)} />
-        <label htmlFor="addCompletionDate">Add completion date upon todo completion</label>
+        <br />
+        <label htmlFor="importTodos">Import file: </label>
+        <input id="importTodos" accept="text/plain" type="file" onChange={onImportTodos} />
         <button onClick={exportTodos}>Export</button>
       </div>
     </div>

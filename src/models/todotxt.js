@@ -1,6 +1,7 @@
+import crypto from "crypto";
+import { format, startOfToday } from "date-fns";
 import { MATCH_TYPES, VIEW_STATES } from "../constants.js";
 import { findMatch, parseTodoTxt } from "./parser.js";
-import { format, startOfToday } from "date-fns";
 
 const isoTodayDate = () => {
     return format(startOfToday(), "yyyy-MM-dd");
@@ -101,6 +102,18 @@ class TodoListModel {
     addTodo(todo, addCreationDate = true) {
         const parsedTodo = addCreationDate ? TodoModel.parse(todo).setCreationDate() : TodoModel.parse(todo);
         return new TodoListModel([...this.todos, parsedTodo ], this.lineEnding);
+    }
+
+    addTodos(todos, addCreationDate = true) {
+        const parsedTodos = todos.map((todo) => {
+            return addCreationDate ? TodoModel.parse(todo).setCreationDate() : TodoModel.parse(todo);
+        });
+        return new TodoListModel([...this.todos, ...parsedTodos ], this.lineEnding);
+    }
+
+    importTodos(todoFile, addCreationDate = true) {
+        const todoStrings = todoFile.split(this.lineEnding).map((todo) => todo.trim()).filter((todo) => !!todo);
+        return this.addTodos(todoStrings, addCreationDate);
     }
 
     show(showState) {

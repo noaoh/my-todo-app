@@ -289,5 +289,74 @@ describe("todotxt", () => {
             const listC = listB.addTodo(inputC);
             expect(listC.notCompleted).toBe('1');
         });
+
+        it('should be able to add multiple todos at once, adding a creation date', ({ expect }) => {
+            const inputA = "meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456";
+            const inputB = "yinkel @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456";
+            const inputC = "x meow";
+            const list = new todotxt.TodoListModel([], "\n");
+            const listA = list.addTodos([inputA, inputB, inputC]);
+            expect(listA.todos.length).toBe(3);
+            expect(listA.todos[0].raw).toBe(`2023-04-13 ${inputA}`);
+            expect(listA.todos[1].raw).toBe(`2023-04-13 ${inputB}`);
+            expect(listA.todos[2].raw).toBe('x 2023-04-13 meow');
+        });
+
+        it('should be able to add multiple todos at once, without adding a creation date', ({ expect }) => {
+            const inputA = "meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456";
+            const inputB = "yinkel @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456";
+            const inputC = "x meow";
+            const list = new todotxt.TodoListModel([], "\n");
+            const listA = list.addTodos([inputA, inputB, inputC], false);
+            expect(listA.todos.length).toBe(3);
+            expect(listA.todos[0].raw).toBe(inputA);
+            expect(listA.todos[1].raw).toBe(inputB);
+            expect(listA.todos[2].raw).toBe(inputC);
+        });
+
+        it('should be able to add multiple todos in a list that already has them', ({ expect }) => {
+            const inputA = "meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456";
+            const inputB = "yinkel @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456";
+            const inputC = "x meow";
+            const inputD = 'x (A) 2023-04-13 2023-04-13 meow';
+            const list = new todotxt.TodoListModel([], "\n");
+            const listA = list.addTodo(inputA)
+            const listB = listA.addTodos([inputB, inputC, inputD]);
+            expect(listB.todos.length).toBe(4);
+            expect(listB.todos[0].raw).toBe(`2023-04-13 ${inputA}`);
+            expect(listB.todos[1].raw).toBe(`2023-04-13 ${inputB}`);
+            expect(listB.todos[2].raw).toBe('x 2023-04-13 meow');
+            expect(listB.todos[3].raw).toBe(inputD);
+        });
+
+        it('should be able to import todos from a file with \'\n\' line endings', ({ expect }) => { 
+            const input = '(A) Thank Mom for the meatballs @phone\n(B) Schedule Goodwill pickup +GarageSale @phone\nPost signs around the neighborhood +GarageSale @GroceryStore Eskimo pies'
+            const list = new todotxt.TodoListModel([], "\n");
+            const listA = list.importTodos(input, false);
+            expect(listA.todos.length).toBe(3);
+            expect(listA.todos[0].raw).toBe('(A) Thank Mom for the meatballs @phone');
+            expect(listA.todos[1].raw).toBe('(B) Schedule Goodwill pickup +GarageSale @phone');
+            expect(listA.todos[2].raw).toBe('Post signs around the neighborhood +GarageSale @GroceryStore Eskimo pies');
+        });
+
+        it('should to able import todos from a file with \'\n\' line endings and a trailing newline', ({ expect }) => {
+            const input = '(A) Thank Mom for the meatballs @phone\n(B) Schedule Goodwill pickup +GarageSale @phone\nPost signs around the neighborhood +GarageSale @GroceryStore Eskimo pies\n';
+            const list = new todotxt.TodoListModel([], "\n");
+            const listA = list.importTodos(input, false);
+            expect(listA.todos.length).toBe(3);
+            expect(listA.todos[0].raw).toBe('(A) Thank Mom for the meatballs @phone');
+            expect(listA.todos[1].raw).toBe('(B) Schedule Goodwill pickup +GarageSale @phone');
+            expect(listA.todos[2].raw).toBe('Post signs around the neighborhood +GarageSale @GroceryStore Eskimo pies');
+        });
+
+        it('should be able to import todos from a file with \'\r\n\' line endings', ({ expect }) => { 
+            const input = '(A) Thank Mom for the meatballs @phone\r\n(B) Schedule Goodwill pickup +GarageSale @phone\r\nPost signs around the neighborhood +GarageSale @GroceryStore Eskimo pies'
+            const list = new todotxt.TodoListModel([], "\r\n");
+            const listA = list.importTodos(input, false);
+            expect(listA.todos.length).toBe(3);
+            expect(listA.todos[0].raw).toBe('(A) Thank Mom for the meatballs @phone');
+            expect(listA.todos[1].raw).toBe('(B) Schedule Goodwill pickup +GarageSale @phone');
+            expect(listA.todos[2].raw).toBe('Post signs around the neighborhood +GarageSale @GroceryStore Eskimo pies');
+        });
     });
 });
