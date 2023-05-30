@@ -46,7 +46,6 @@ const osLineEnding = getOsLineEndings();
 
 const todoListInitializer = (value) => {
   const { todos } = value;
-  console.log(todos);
   const todoList = todos.map((todo) => {
     return new TodoModel(todo);
   });
