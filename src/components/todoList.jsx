@@ -2,8 +2,29 @@ import { List, ListItem } from '@mui/material';
 import { TodoItem } from './todoItem.jsx';
 
 function TodoList(props) {
-  const { todos, showState, onTodoCheckboxChange, onTodoTextInputChange, onDeleteTodo, onDeleteKeyOrBackspace } = props;
-  const filteredTodos = todos.show(showState);
+  const { todosModel, setTodosModel, showState, addCompletionDate } = props;
+  const filteredTodos = todosModel.show(showState);
+
+  function onTodoCheckboxChange(id) {
+    const newTodos = todosModel.toggleTodo(id, addCompletionDate);
+    setTodosModel(newTodos);
+  }
+
+  function onTodoTextInputChange(id, text) {
+    const newTodos = todosModel.editTodo(id, text, addCompletionDate);
+    setTodosModel(newTodos);
+  }
+
+  function onDeleteTodo(id) {
+    const newTodos = todosModel.removeTodo(id);
+    setTodosModel(newTodos);
+  }
+
+  function onDeleteKeyOrBackspace(e, text, id) {
+    if (e.key === 'Delete' || (e.key === 'Backspace' && text.length === 0)) { 
+      onDeleteTodo(id);
+    }
+  }
 
   return (
     <List>

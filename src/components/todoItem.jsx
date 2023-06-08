@@ -6,7 +6,7 @@ function TodoItem(props) {
     <>
       <Checkbox checked={completed} onChange={() => onTodoCheckboxChange(id)} />
       <TextField value={raw} onChange={(e) => onTodoTextInputChange(id, e.target.value)} onKeyUp={(e) => onDeleteKeyOrBackspace(e, raw, id)} />
-      <Button variant="contained" onClick={() => onDeleteTodo}>Delete</Button>
+      <Button variant="contained" onClick={() => onDeleteTodo(id)}>Delete</Button>
     </>
   );
 }

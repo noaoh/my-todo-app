@@ -53,18 +53,8 @@ function App() {
     }
   }
 
-  function onTodoCheckboxChange(id) {
-    const newTodos = todosModel.toggleTodo(id, addCompletionDate);
-    setTodosModel(newTodos);
-  }
-
   function onRemoveTodos() {
     const newTodos = todosModel.removeCompleted();
-    setTodosModel(newTodos);
-  }
-
-  function onTodoTextInputChange(id, text) {
-    const newTodos = todosModel.editTodo(id, text, addCompletionDate);
     setTodosModel(newTodos);
   }
 
@@ -72,17 +62,6 @@ function App() {
     const todoListString = todosModel.toString();
     const blob = new Blob([todoListString], {type: 'text/plain'}); 
     FileSaver.saveAs(blob, 'todo.txt');
-  }
-
-  function onDeleteTodo(id) {
-    const newTodos = todosModel.removeTodo(id);
-    setTodosModel(newTodos);
-  }
-
-  function onDeleteKeyOrBackspace(e, text, id) {
-    if (e.key === 'Delete' || (e.key === 'Backspace' && text.length === 0)) { 
-      onDeleteTodo(id);
-    }
   }
 
   return (
@@ -93,7 +72,7 @@ function App() {
       <div className="card">
         <TextField type="text" label="Add your todo" value={currentTodo} onKeyUp={onEnterKey} onChange={(e) => setCurrentTodo(e.target.value)} inputProps={{ minLength: 1 }} />
         <Button variant="contained" onClick={onAddTodo}>Add</Button>
-        <TodoList showState={showState} todos={todosModel} onTodoCheckboxChange={onTodoCheckboxChange} onTodoTextInputChange={onTodoTextInputChange} onDeleteTodo={onDeleteTodo} onDeleteKeyOrBackspace={onDeleteKeyOrBackspace} />
+        <TodoList showState={showState} todosModel={todosModel} setTodosModel={setTodosModel} addCompletionDate={addCompletionDate} />
         <Button variant="contained" onClick={onRemoveTodos}>Remove completed todos</Button>
         <Select value={showState} onChange={(e) => setShowState(e.target.value)}>
           <MenuItem value={VIEW_STATES.ALL}>Show all</MenuItem>
