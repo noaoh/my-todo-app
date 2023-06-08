@@ -1,9 +1,12 @@
-import { useState } from 'react'
 import FileSaver from 'file-saver';
 import { isUNIX, isMacOS, isLinux, isIOS, isAndroid } from 'get-os-name';
+import { TextField, Button, Select, MenuItem, Typography } from '@mui/material';
 import './App.css'
 import { VIEW_STATES } from './constants'
 import { TodoModel, TodoListModel } from './models/todotxt';
+import { TodoList } from './components/todoList';
+import { FileImport } from './components/fileInput';
+import { Settings } from './components/settings';
 import { useLocalStorage } from './hooks/useLocalStorage';
 
 function getOsLineEndings() {
@@ -15,32 +18,6 @@ function getOsLineEndings() {
   } else {
     return "\r\n";
   }
-}
-
-function TodoItem(props) {
-  const { id, raw, completed, onTodoCheckboxChange, onTodoTextInputChange, onDeleteTodo, onDeleteKeyOrBackspace } = props;
-  return (
-    <li key={id}>
-      <input type="checkbox" checked={completed} id={id} onChange={() => onTodoCheckboxChange(id)}/>
-      <input htmlFor={id} type="text" value={raw} onChange={(e) => onTodoTextInputChange(id, e.target.value)} onKeyUp={(e) => onDeleteKeyOrBackspace(e, raw, id)}/>
-      <button onClick={() => onDeleteTodo(id)}>Delete</button>
-    </li>
-  );
-}
-
-function TodoList(props) {
-  const { todos, showState, onTodoCheckboxChange, onTodoTextInputChange, onDeleteTodo, onDeleteKeyOrBackspace } = props;
-  const filteredTodos = todos.show(showState);
-
-  return (
-    <ul>
-      {filteredTodos.map((todo) => {
-        return (
-          <TodoItem key={todo.id} id={todo.id} raw={todo.raw} completed={todo.completed} onTodoCheckboxChange={onTodoCheckboxChange} onTodoTextInputChange={onTodoTextInputChange} onDeleteTodo={onDeleteTodo} onDeleteKeyOrBackspace={onDeleteKeyOrBackspace} />
-        );
-      })}
-    </ul>
-  );
 }
 
 const osLineEnding = getOsLineEndings();
@@ -91,17 +68,6 @@ function App() {
     setTodosModel(newTodos);
   }
 
-  function onImportTodos(e) {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const contents = e.target.result;
-      const newTodos = todosModel.importTodos(contents);
-      setTodosModel(newTodos);
-    };
-    reader.readAsText(file);
-  }
-
   function exportTodos() {
     const todoListString = todosModel.toString();
     const blob = new Blob([todoListString], {type: 'text/plain'}); 
@@ -121,27 +87,21 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Todos</h1>
-      <h2>You currently have {todosModel.notCompleted} todos to complete</h2>
+      <Settings addCreationDate={addCreationDate} setAddCreationDate={setAddCreationDate} addCompletionDate={addCompletionDate} setAddCompletionDate={setAddCompletionDate} />
+      <Typography variant="h3">Todos</Typography>
+      <Typography variant="h4">You currently have {todosModel.notCompleted} todos to complete</Typography>
       <div className="card">
-        <input type="text" minLength="1" placeholder="Add your todo" value={currentTodo} onKeyUp={onEnterKey} onChange={(e) => setCurrentTodo(e.target.value)} />
-        <button onClick={onAddTodo}>Add</button>
+        <TextField type="text" label="Add your todo" value={currentTodo} onKeyUp={onEnterKey} onChange={(e) => setCurrentTodo(e.target.value)} inputProps={{ minLength: 1 }} />
+        <Button variant="contained" onClick={onAddTodo}>Add</Button>
         <TodoList showState={showState} todos={todosModel} onTodoCheckboxChange={onTodoCheckboxChange} onTodoTextInputChange={onTodoTextInputChange} onDeleteTodo={onDeleteTodo} onDeleteKeyOrBackspace={onDeleteKeyOrBackspace} />
-        <button onClick={onRemoveTodos}>Remove completed todos</button>
-        <label htmlFor="selectShowState">Show todos:</label>
-        <select id="selectShowState" value={showState} onChange={(e) => setShowState(e.target.value)}>
-          <option value={VIEW_STATES.ALL}>Show all</option>
-          <option value={VIEW_STATES.ACTIVE}>Show active</option>
-          <option value={VIEW_STATES.COMPLETED}>Show completed</option>
-        </select>
-        <label htmlFor="addCreationDate">Add creation date upon todo creation </label>
-        <input id="addCreationDate" type="checkbox" checked={addCreationDate} onChange={() => setAddCreationDate(!addCreationDate)} />
-        <label htmlFor="addCompletionDate">Add completion date upon todo completion </label>
-        <input id="addCompletionDate" type="checkbox" checked={addCompletionDate} onChange={() => setAddCompletionDate(!addCompletionDate)} />
-        <br />
-        <label htmlFor="importTodos">Import file: </label>
-        <input id="importTodos" accept="text/plain" type="file" onChange={onImportTodos} />
-        <button onClick={exportTodos}>Export</button>
+        <Button variant="contained" onClick={onRemoveTodos}>Remove completed todos</Button>
+        <Select value={showState} onChange={(e) => setShowState(e.target.value)}>
+          <MenuItem value={VIEW_STATES.ALL}>Show all</MenuItem>
+          <MenuItem value={VIEW_STATES.ACTIVE}>Show active</MenuItem>
+          <MenuItem value={VIEW_STATES.COMPLETED}>Show completed</MenuItem>
+        </Select>
+        <FileImport todosModel={todosModel} setTodosModel={setTodosModel} />
+        <Button variant="contained" onClick={exportTodos}>Export</Button>
       </div>
     </div>
   );

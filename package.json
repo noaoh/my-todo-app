@@ -10,6 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@fontsource/roboto": "^5.0.2",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/material": "^5.13.4",
     "date-fns": "^2.29.3",
     "file-saver": "^2.0.5",
     "get-os-name": "^1.0.3",
