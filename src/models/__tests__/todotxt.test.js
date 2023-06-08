@@ -377,4 +377,23 @@ describe("todotxt", () => {
             expect(listA.todos[2].raw).toBe('Post signs around the neighborhood +GarageSale @GroceryStore Eskimo pies');
         });
     });
+
+    it("should be able to remove a todo when only one is present", ({ expect }) => {
+        const input = "x (A) 2021-01-02 2021-01-01 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456";
+        const todo = todotxt.TodoModel.parse(input);
+        const todoList = new todotxt.TodoListModel([todo], "\n");
+        const newTodoList = todoList.removeTodo(todo.id);
+        expect(newTodoList.todos.length).toBe(0);
+    });
+
+    it("should be able to remove a todo when multiple todos are present", ({ expect }) => {
+        const inputA = "meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456";
+        const inputB = "yinkel @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456";
+        const inputC = "x meow";
+        const inputD = 'x (A) 2023-04-13 2023-04-13 meow';
+        const list = new todotxt.TodoListModel([], "\n").addTodos([inputA, inputB, inputC, inputD], false);
+        const { id } = list.todos[1];
+        const newList = list.removeTodo(id);
+        expect(newList.todos.length).toBe(3);
+    });
 });

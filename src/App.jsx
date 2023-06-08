@@ -18,24 +18,25 @@ function getOsLineEndings() {
 }
 
 function TodoItem(props) {
-  const { id, raw, completed, onTodoCheckboxChange, onTodoTextInputChange } = props;
+  const { id, raw, completed, onTodoCheckboxChange, onTodoTextInputChange, onDeleteTodo, onDeleteKeyOrBackspace } = props;
   return (
     <li key={id}>
       <input type="checkbox" checked={completed} id={id} onChange={() => onTodoCheckboxChange(id)}/>
-      <input htmlFor={id} type="text" value={raw} onChange={(e) => onTodoTextInputChange(id, e.target.value)}/>
+      <input htmlFor={id} type="text" value={raw} onChange={(e) => onTodoTextInputChange(id, e.target.value)} onKeyUp={(e) => onDeleteKeyOrBackspace(e, raw, id)}/>
+      <button onClick={() => onDeleteTodo(id)}>Delete</button>
     </li>
   );
 }
 
 function TodoList(props) {
-  const { todos, showState, onTodoCheckboxChange, onTodoTextInputChange } = props;
+  const { todos, showState, onTodoCheckboxChange, onTodoTextInputChange, onDeleteTodo, onDeleteKeyOrBackspace } = props;
   const filteredTodos = todos.show(showState);
 
   return (
     <ul>
       {filteredTodos.map((todo) => {
         return (
-          <TodoItem key={todo.id} id={todo.id} raw={todo.raw} completed={todo.completed} onTodoCheckboxChange={onTodoCheckboxChange} onTodoTextInputChange={onTodoTextInputChange} />
+          <TodoItem key={todo.id} id={todo.id} raw={todo.raw} completed={todo.completed} onTodoCheckboxChange={onTodoCheckboxChange} onTodoTextInputChange={onTodoTextInputChange} onDeleteTodo={onDeleteTodo} onDeleteKeyOrBackspace={onDeleteKeyOrBackspace} />
         );
       })}
     </ul>
@@ -107,6 +108,17 @@ function App() {
     FileSaver.saveAs(blob, 'todo.txt');
   }
 
+  function onDeleteTodo(id) {
+    const newTodos = todosModel.removeTodo(id);
+    setTodosModel(newTodos);
+  }
+
+  function onDeleteKeyOrBackspace(e, text, id) {
+    if (e.key === 'Delete' || (e.key === 'Backspace' && text.length === 0)) { 
+      onDeleteTodo(id);
+    }
+  }
+
   return (
     <div className="App">
       <h1>Todos</h1>
@@ -114,7 +126,7 @@ function App() {
       <div className="card">
         <input type="text" minLength="1" placeholder="Add your todo" value={currentTodo} onKeyUp={onEnterKey} onChange={(e) => setCurrentTodo(e.target.value)} />
         <button onClick={onAddTodo}>Add</button>
-        <TodoList showState={showState} todos={todosModel} onTodoCheckboxChange={onTodoCheckboxChange} onTodoTextInputChange={onTodoTextInputChange} />
+        <TodoList showState={showState} todos={todosModel} onTodoCheckboxChange={onTodoCheckboxChange} onTodoTextInputChange={onTodoTextInputChange} onDeleteTodo={onDeleteTodo} onDeleteKeyOrBackspace={onDeleteKeyOrBackspace} />
         <button onClick={onRemoveTodos}>Remove completed todos</button>
         <label htmlFor="selectShowState">Show todos:</label>
         <select id="selectShowState" value={showState} onChange={(e) => setShowState(e.target.value)}>

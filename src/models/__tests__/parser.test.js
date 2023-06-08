@@ -141,6 +141,36 @@ describe("parser", () => {
             const result = parseReducers.extra(state, action);
             expect(result.extras).toEqual({ test: "123", abc: "meow" });
         });
+        
+        it("should apply the other state when text is empty string", ({ expect }) => {
+            const state = {
+                completed: false,
+                priority: "",
+                completionDate: "",
+                creationDate: "",
+                text: "",
+                contexts: [],
+                projects: [],
+                extras: {},
+            };
+            const action = {
+                other: " ",
+            };
+            const result = parseReducers.other(state, action);
+            expect(result.text).toBe(" ");
+        });
+
+        it("should apply the text state when text is non-empty string", ({ expect }) => {
+            const state = {
+                ...initialTodoState,
+                text: "test",
+            };
+            const action = {
+                other: " ",
+            };
+            const result = parseReducers.other(state, action);
+            expect(result.text).toBe("test  ");
+        });
     });
 
     describe("parseMatchers", () => {
@@ -256,6 +286,14 @@ describe("parser", () => {
         it("should not match text with an '+' symbol at the beginning", ({ expect }) => {
             const result = parseMatchers.text("+meow");
             expect(result).toBe(false);
+        });
+
+        it("should match a non-matching text with other", ({ expect }) => {
+            const result = parseMatchers.other(" ");
+            expect(result).toStrictEqual({
+                other: " ",
+                matchType: MATCH_TYPES.OTHER, 
+            });
         });
     });
 

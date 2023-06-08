@@ -152,6 +152,11 @@ class TodoListModel {
         return new TodoListModel(newList, this.lineEnding);
     }
 
+    removeTodo(id) {
+        const newList = this.todos.filter((todo) => todo.id !== id);
+        return new TodoListModel(newList, this.lineEnding);
+    }
+
     editTodo(id, text) {
         const newList = this.todos.map((todo) => {
             if (id === todo.id) {

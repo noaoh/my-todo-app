@@ -29,6 +29,13 @@ const parseReducers = {
             return { ...state, text: state.text + " " + action.text };
         }
     },
+    [MATCH_TYPES.OTHER]: (state, action) => {
+        if (state.text === "") {
+            return { ...state, text: action.other };
+        } else {
+            return { ...state, text: state.text + " " + action.other };
+        }
+    },
 };
 
 const parseMatchers = {
@@ -94,14 +101,17 @@ const parseMatchers = {
             return false;
         }
     },
+    [MATCH_TYPES.OTHER]: (token) => {
+        return { matchType: MATCH_TYPES.OTHER, other: token };
+    }
 }
 
 const parseState = {
-    0: [ MATCH_TYPES.COMPLETED, MATCH_TYPES.PRIORITY, MATCH_TYPES.COMPLETION_DATE, MATCH_TYPES.CONTEXT, MATCH_TYPES.PROJECT, MATCH_TYPES.EXTRA, MATCH_TYPES.TEXT ],
-    1: [ MATCH_TYPES.PRIORITY, MATCH_TYPES.COMPLETION_DATE, MATCH_TYPES.CREATION_DATE, MATCH_TYPES.CONTEXT, MATCH_TYPES.PROJECT, MATCH_TYPES.EXTRA, MATCH_TYPES.TEXT ],
-    2: [ MATCH_TYPES.COMPLETION_DATE, MATCH_TYPES.CREATION_DATE, MATCH_TYPES.CONTEXT, MATCH_TYPES.PROJECT, MATCH_TYPES.EXTRA, MATCH_TYPES.TEXT ],
-    3: [ MATCH_TYPES.CREATION_DATE, MATCH_TYPES.CONTEXT, MATCH_TYPES.PROJECT, MATCH_TYPES.EXTRA, MATCH_TYPES.TEXT ],
-    "rest": [ MATCH_TYPES.CONTEXT, MATCH_TYPES.PROJECT, MATCH_TYPES.EXTRA, MATCH_TYPES.TEXT ],
+    0: [ MATCH_TYPES.COMPLETED, MATCH_TYPES.PRIORITY, MATCH_TYPES.COMPLETION_DATE, MATCH_TYPES.CONTEXT, MATCH_TYPES.PROJECT, MATCH_TYPES.EXTRA, MATCH_TYPES.TEXT, MATCH_TYPES.OTHER ],
+    1: [ MATCH_TYPES.PRIORITY, MATCH_TYPES.COMPLETION_DATE, MATCH_TYPES.CREATION_DATE, MATCH_TYPES.CONTEXT, MATCH_TYPES.PROJECT, MATCH_TYPES.EXTRA, MATCH_TYPES.TEXT, MATCH_TYPES.OTHER ],
+    2: [ MATCH_TYPES.COMPLETION_DATE, MATCH_TYPES.CREATION_DATE, MATCH_TYPES.CONTEXT, MATCH_TYPES.PROJECT, MATCH_TYPES.EXTRA, MATCH_TYPES.TEXT, MATCH_TYPES.OTHER ],
+    3: [ MATCH_TYPES.CREATION_DATE, MATCH_TYPES.CONTEXT, MATCH_TYPES.PROJECT, MATCH_TYPES.EXTRA, MATCH_TYPES.TEXT, MATCH_TYPES.OTHER ],
+    "rest": [ MATCH_TYPES.CONTEXT, MATCH_TYPES.PROJECT, MATCH_TYPES.EXTRA, MATCH_TYPES.TEXT, MATCH_TYPES.OTHER ],
 };
 
 
@@ -138,7 +148,12 @@ const parseTodoTxt = (string) => {
         } else {
             const match = findMatch(parseState["rest"], token);
             const { matchType, ...rest } = match;
-            currentMatchType = matchType;
+            if (!matchType) {
+                rest.other = token;
+                currentMatchType = MATCH_TYPES.OTHER;
+            } else {
+                currentMatchType = matchType;
+            }
             result = parseReducers[currentMatchType](result, rest);
         }
         i += 1;

@@ -13,6 +13,7 @@ const MATCH_TYPES = {
     CONTEXT: 'context',
     PROJECT: 'project',
     EXTRA: 'extra',
+    OTHER: 'other',
 };
 
 const initialTodoState = {
