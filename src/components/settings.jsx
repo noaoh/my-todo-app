@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { IconButton, Menu, MenuItem, Checkbox, FormControlLabel } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { useAtom } from 'jotai';
+import { addCompletionDateAtom, addCreationDateAtom } from '../atoms';
 
-function Settings(props) {
-    const { addCreationDate, setAddCreationDate, addCompletionDate, setAddCompletionDate } = props;
+function Settings() {
+    const [addCreationDate, setAddCreationDate] = useAtom(addCreationDateAtom);
+    const [addCompletionDate, setAddCompletionDate] = useAtom(addCompletionDateAtom);
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleMenuClick = (event) => {

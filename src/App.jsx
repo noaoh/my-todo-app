@@ -1,44 +1,19 @@
 import FileSaver from 'file-saver';
 import { Box, TextField, Button, Select, MenuItem, Grid } from '@mui/material';
-import { isUNIX, isMacOS, isLinux, isIOS, isAndroid } from 'get-os-name';
+import { useAtom, useAtomValue } from 'jotai';
 import './App.css'
 import { VIEW_STATES } from './constants'
-import { TodoModel, TodoListModel } from './models/todotxt';
 import { TodoList } from './components/todoList';
 import { FileImport } from './components/fileInput';
 import { Settings } from './components/settings';
-import { useLocalStorage } from './hooks/useLocalStorage';
-
-function getOsLineEndings() {
-  // UNIX operating systems use '\n' to end a line
-  // Windows and other operating systems use '\r\n' to end a line
-  // This matters for the output of our todo.txt file
-  if (isUNIX() || isMacOS() | isLinux() || isIOS() || isAndroid()) {
-    return "\n";
-  } else {
-    return "\r\n";
-  }
-}
-
-const osLineEnding = getOsLineEndings();
-
-const todoListInitializer = (value) => {
-  const { todos } = value;
-  const todoList = todos.map((todo) => {
-    return new TodoModel(todo);
-  });
-
-  return new TodoListModel(todoList, osLineEnding);
-}
+import { addCreationDateAtom, currentTodoAtom, searchQueryAtom, showStateAtom, todosModelAtom } from './atoms';
 
 function App() {
-  const prefix = 'todotxtapp';
-  const [todosModel, setTodosModel] = useLocalStorage(`${prefix}:todosModel`, { todos: []}, todoListInitializer);
-  const [currentTodo, setCurrentTodo] = useLocalStorage(`${prefix}:currentTodo`, '');
-  const [showState, setShowState] = useLocalStorage(`${prefix}:showState`, VIEW_STATES.ALL);
-  const [addCreationDate, setAddCreationDate] = useLocalStorage(`${prefix}:addCreationDate`, true);
-  const [addCompletionDate, setAddCompletionDate] = useLocalStorage(`${prefix}:addCompletionDate`, true);
-  const [searchQuery, setSearchQuery] = useLocalStorage(`${prefix}:searchQuery`, '');
+  const [todosModel, setTodosModel] = useAtom(todosModelAtom);
+  const [currentTodo, setCurrentTodo] = useAtom(currentTodoAtom);
+  const [showState, setShowState] = useAtom(showStateAtom);
+  const addCreationDate = useAtomValue(addCreationDateAtom);
+  const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom);
 
   function onAddTodo() {
     if (currentTodo.length !== 0) {
@@ -80,7 +55,7 @@ function App() {
             <Button variant="contained" onClick={exportTodos}>Export</Button>
         </Grid>
         <Grid item>
-          <Settings addCreationDate={addCreationDate} setAddCreationDate={setAddCreationDate} addCompletionDate={addCompletionDate} setAddCompletionDate={setAddCompletionDate} />
+          <Settings />
         </Grid>
       </Grid>
       <Grid spacing={2} container justifyContent="center" alignItem="center">
@@ -91,7 +66,7 @@ function App() {
           <Button variant="contained" onClick={onAddTodo}>Add</Button>
         </Grid>
       </Grid>
-      <TodoList showState={showState} todosModel={todosModel} setTodosModel={setTodosModel} addCompletionDate={addCompletionDate} searchQuery={searchQuery} />
+      <TodoList />
       <Grid spacing={2} container justifyContent="center" alignItem="center">
         <Grid item>
           <TextField fullWidth type="text" label="Search your todos" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
