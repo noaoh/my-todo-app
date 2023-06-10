@@ -1654,6 +1654,11 @@ functions-have-names@^1.2.2, functions-have-names@^1.2.3:
   resolved "https://registry.yarnpkg.com/functions-have-names/-/functions-have-names-1.2.3.tgz#0404fe4ee2ba2f607f0e0ec3c80bae994133b834"
   integrity sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==
 
+fuzzy-tools@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/fuzzy-tools/-/fuzzy-tools-2.0.1.tgz#9cac7cdb60322a15434202b37ccd2bcd62c25082"
+  integrity sha512-tY0jqnGcY07E/O5gf+PTDTkwtai3d+0043wyD+Kr+WQx+8EdhFODto1ItoLXgF682xWDI3PEAnqJqM+o4XpVZg==
+
 gensync@^1.0.0-beta.2:
   version "1.0.0-beta.2"
   resolved "https://registry.yarnpkg.com/gensync/-/gensync-1.0.0-beta.2.tgz#32a6ee76c3d7f52d46b2b1ae5d93fea8580a25e0"

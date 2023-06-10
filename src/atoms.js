@@ -3,6 +3,7 @@ import { atomWithStorage } from 'jotai/utils';
 import {
   isUNIX, isMacOS, isLinux, isIOS, isAndroid,
 } from 'get-os-name';
+import { filter as filterFuzzy } from 'fuzzy-tools';
 import { VIEW_STATES } from './constants';
 import { TodoListModel, TodoModel } from './models/todotxt';
 
@@ -48,8 +49,13 @@ const filteredTodosAtom = atom((get) => {
   const todosModel = get(todosModelAtom);
   const searchQuery = get(searchQueryAtom);
   const showState = get(showStateAtom);
-  const filterRegex = new RegExp(`.*${escapeRegExp(searchQuery)}.*`);
-  return todosModel.show(showState).filter((todo) => filterRegex.test(todo.raw));
+  if (searchQuery === '') {
+    return todosModel.show(showState);
+  } else {
+    return filterFuzzy(searchQuery, todosModel.show(showState), {
+      name: 'raw',
+    });
+  }
 });
 
 /* eslint-disable max-len */

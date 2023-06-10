@@ -18,6 +18,7 @@
     "@vitejs/plugin-react": "^4.0.0",
     "date-fns": "^2.29.3",
     "file-saver": "^2.0.5",
+    "fuzzy-tools": "^2.0.1",
     "get-os-name": "^1.0.3",
     "jotai": "^2.1.1",
     "react": "^18.2.0",
