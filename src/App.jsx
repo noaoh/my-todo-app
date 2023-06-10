@@ -1,6 +1,6 @@
 import FileSaver from 'file-saver';
+import { Box, TextField, Button, Select, MenuItem, Grid } from '@mui/material';
 import { isUNIX, isMacOS, isLinux, isIOS, isAndroid } from 'get-os-name';
-import { TextField, Button, Select, MenuItem, Typography } from '@mui/material';
 import './App.css'
 import { VIEW_STATES } from './constants'
 import { TodoModel, TodoListModel } from './models/todotxt';
@@ -38,6 +38,7 @@ function App() {
   const [showState, setShowState] = useLocalStorage(`${prefix}:showState`, VIEW_STATES.ALL);
   const [addCreationDate, setAddCreationDate] = useLocalStorage(`${prefix}:addCreationDate`, true);
   const [addCompletionDate, setAddCompletionDate] = useLocalStorage(`${prefix}:addCompletionDate`, true);
+  const [searchQuery, setSearchQuery] = useLocalStorage(`${prefix}:searchQuery`, '');
 
   function onAddTodo() {
     if (currentTodo.length !== 0) {
@@ -58,6 +59,11 @@ function App() {
     setTodosModel(newTodos);
   }
 
+  function onClearTodos() {
+    const newTodos = todosModel.clearTodos();
+    setTodosModel(newTodos);
+  }
+
   function exportTodos() {
     const todoListString = todosModel.toString();
     const blob = new Blob([todoListString], {type: 'text/plain'}); 
@@ -65,24 +71,48 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <Settings addCreationDate={addCreationDate} setAddCreationDate={setAddCreationDate} addCompletionDate={addCompletionDate} setAddCompletionDate={setAddCompletionDate} />
-      <Typography variant="h3">Todos</Typography>
-      <Typography variant="h4">You currently have {todosModel.notCompleted} todos to complete</Typography>
-      <div className="card">
-        <TextField type="text" label="Add your todo" value={currentTodo} onKeyUp={onEnterKey} onChange={(e) => setCurrentTodo(e.target.value)} inputProps={{ minLength: 1 }} />
-        <Button variant="contained" onClick={onAddTodo}>Add</Button>
-        <TodoList showState={showState} todosModel={todosModel} setTodosModel={setTodosModel} addCompletionDate={addCompletionDate} />
-        <Button variant="contained" onClick={onRemoveTodos}>Remove completed todos</Button>
-        <Select value={showState} onChange={(e) => setShowState(e.target.value)}>
-          <MenuItem value={VIEW_STATES.ALL}>Show all</MenuItem>
-          <MenuItem value={VIEW_STATES.ACTIVE}>Show active</MenuItem>
-          <MenuItem value={VIEW_STATES.COMPLETED}>Show completed</MenuItem>
-        </Select>
-        <FileImport todosModel={todosModel} setTodosModel={setTodosModel} />
-        <Button variant="contained" onClick={exportTodos}>Export</Button>
-      </div>
-    </div>
+    <Box>
+      <Grid spacing={2} container justifyContent="center" alignItems="center">
+        <Grid item>
+          <FileImport todosModel={todosModel} setTodosModel={setTodosModel} />
+        </Grid>
+        <Grid item>
+            <Button variant="contained" onClick={exportTodos}>Export</Button>
+        </Grid>
+        <Grid item>
+          <Settings addCreationDate={addCreationDate} setAddCreationDate={setAddCreationDate} addCompletionDate={addCompletionDate} setAddCompletionDate={setAddCompletionDate} />
+        </Grid>
+      </Grid>
+      <Grid spacing={2} container justifyContent="center" alignItem="center">
+        <Grid item>
+          <TextField fullWidth type="text" label="Add your todo" value={currentTodo} onKeyUp={onEnterKey} onChange={(e) => setCurrentTodo(e.target.value)} inputProps={{ minLength: 1 }} />
+        </Grid>
+        <Grid item>
+          <Button variant="contained" onClick={onAddTodo}>Add</Button>
+        </Grid>
+      </Grid>
+      <TodoList showState={showState} todosModel={todosModel} setTodosModel={setTodosModel} addCompletionDate={addCompletionDate} searchQuery={searchQuery} />
+      <Grid spacing={2} container justifyContent="center" alignItem="center">
+        <Grid item>
+          <TextField fullWidth type="text" label="Search your todos" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+        </Grid>
+        <Grid item>
+          <Select value={showState} onChange={(e) => setShowState(e.target.value)}>
+            <MenuItem value={VIEW_STATES.ALL}>Show all</MenuItem>
+            <MenuItem value={VIEW_STATES.ACTIVE}>Show active</MenuItem>
+            <MenuItem value={VIEW_STATES.COMPLETED}>Show completed</MenuItem>
+          </Select>
+        </Grid>
+      </Grid>
+      <Grid spacing={2} container justifyContent="center" alignItems="center">
+        <Grid item>
+          <Button variant="contained" onClick={onRemoveTodos}>Remove completed todos</Button>
+        </Grid>
+        <Grid item>
+          <Button variant="contained" onClick={onClearTodos}>Clear all todos</Button>
+        </Grid>
+      </Grid>
+    </Box>
   );
 }
 

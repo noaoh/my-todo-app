@@ -1,9 +1,14 @@
 import { List, ListItem } from '@mui/material';
 import { TodoItem } from './todoItem.jsx';
 
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
+
 function TodoList(props) {
-  const { todosModel, setTodosModel, showState, addCompletionDate } = props;
-  const filteredTodos = todosModel.show(showState);
+  const { todosModel, setTodosModel, showState, addCompletionDate, searchQuery } = props;
+  const filterRegex = new RegExp(`.*${escapeRegExp(searchQuery)}.*`);
+  const filteredTodos = todosModel.show(showState).filter((todo) => filterRegex.test(todo.raw));
 
   function onTodoCheckboxChange(id) {
     const newTodos = todosModel.toggleTodo(id, addCompletionDate);

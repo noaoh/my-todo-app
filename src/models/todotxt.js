@@ -152,6 +152,11 @@ class TodoListModel {
         return new TodoListModel(newList, this.lineEnding);
     }
 
+    clearTodos() {
+        const newList = [];
+        return new TodoListModel(newList, this.lineEnding);
+    }
+
     removeTodo(id) {
         const newList = this.todos.filter((todo) => todo.id !== id);
         return new TodoListModel(newList, this.lineEnding);
@@ -187,10 +192,6 @@ class TodoListModel {
         return {
             todos: this.todos.map((todo) => todo.toJSON()),
         };
-    }
-
-    get notCompleted() {
-        return this.show(VIEW_STATES.ACTIVE).length.toString();
     }
 }
 

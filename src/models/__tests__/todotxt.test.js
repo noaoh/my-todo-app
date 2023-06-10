@@ -287,17 +287,6 @@ describe("todotxt", () => {
             expect(listString).toBe(inputA + "\n" + inputB + "\n" + inputC + "\n");
         });
 
-        it("should have a computed notCompleted property", ({ expect }) => {
-            const inputA = "x (A) 2021-01-01 2021-01-02 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456";
-            const inputB = "x (A) 2021-01-01 2021-01-02 yinkel @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456";
-            const inputC = "meow";
-            const list = new todotxt.TodoListModel([], "\n");
-            const listA = list.addTodo(inputA);
-            const listB = listA.addTodo(inputB);
-            const listC = listB.addTodo(inputC);
-            expect(listC.notCompleted).toBe('1');
-        });
-
         it('should be able to add multiple todos at once, adding a creation date', ({ expect }) => {
             const inputA = "meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456";
             const inputB = "yinkel @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456";
@@ -395,5 +384,15 @@ describe("todotxt", () => {
         const { id } = list.todos[1];
         const newList = list.removeTodo(id);
         expect(newList.todos.length).toBe(3);
+    });
+
+    it("should be able to clear todos", ({ expect }) => {
+        const inputA = "meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456";
+        const inputB = "yinkel @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456";
+        const inputC = "x meow";
+        const inputD = 'x (A) 2023-04-13 2023-04-13 meow';
+        const list = new todotxt.TodoListModel([], "\n").addTodos([inputA, inputB, inputC, inputD], false);
+        const newList = list.clearTodos();
+        expect(newList.todos.length).toBe(0);
     });
 });

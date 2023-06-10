@@ -1,13 +1,19 @@
-import { Checkbox, TextField, Button } from "@mui/material";
+import { Grid, Checkbox, TextField, Button } from "@mui/material";
 
 function TodoItem(props) {
   const { id, raw, completed, onTodoCheckboxChange, onTodoTextInputChange, onDeleteTodo, onDeleteKeyOrBackspace } = props;
   return (
-    <>
-      <Checkbox checked={completed} onChange={() => onTodoCheckboxChange(id)} />
-      <TextField value={raw} onChange={(e) => onTodoTextInputChange(id, e.target.value)} onKeyUp={(e) => onDeleteKeyOrBackspace(e, raw, id)} />
-      <Button variant="contained" onClick={() => onDeleteTodo(id)}>Delete</Button>
-    </>
+    <Grid spacing={1} container justifyContent="center" alignItems="center">
+      <Grid item>
+        <Checkbox checked={completed} onChange={() => onTodoCheckboxChange(id)} />
+      </Grid>
+      <Grid item>
+        <TextField value={raw} onChange={(e) => onTodoTextInputChange(id, e.target.value)} onKeyUp={(e) => onDeleteKeyOrBackspace(e, raw, id)} />
+      </Grid>
+      <Grid item>
+        <Button variant="contained" onClick={() => onDeleteTodo(id)}>Delete</Button>
+      </Grid>
+    </Grid>
   );
 }
 

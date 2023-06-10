@@ -26,7 +26,7 @@ function FileImport(props) {
 
     return (
         <>
-            <TextField type="file" accept=".txt" onChange={handleFileChange} helperText="import your todos" inputProps={{ multiple: false }} />
+            <TextField type="file" accept=".txt" onChange={handleFileChange} helperText="import your todo.txt file" inputProps={{ multiple: false }} />
             {selectedFile !== null ? <Button variant="contained" color="primary" onClick={onImportTodos}>Import</Button> : null}
         </>
     );
