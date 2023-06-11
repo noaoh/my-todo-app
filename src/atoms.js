@@ -32,7 +32,7 @@ const todosModelAtom = atomWithStorage('todosModel', new TodoListModel([], osLin
   getItem: (key) => {
     const storedValue = localStorage.getItem(key);
     if (storedValue === null) {
-      throw new Error('no value stored');
+      return new TodoListModel([], osLineEnding);
     } else {
       const parsedValue = JSON.parse(storedValue);
       const { todos } = parsedValue;
