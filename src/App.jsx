@@ -52,7 +52,7 @@ function App() {
           <FileImport todosModel={todosModel} setTodosModel={setTodosModel} />
         </Grid>
         <Grid item>
-            <Button variant="contained" onClick={exportTodos}>Export</Button>
+            <Button style={{ backgroundColor: 'green', color: 'white' }} variant="contained" onClick={exportTodos}>Export</Button>
         </Grid>
         <Grid item>
           <Settings />
@@ -60,16 +60,16 @@ function App() {
       </Grid>
       <Grid spacing={2} container justifyContent="center" alignItem="center">
         <Grid item>
-          <TextField fullWidth type="text" label="Add your todo" value={currentTodo} onKeyUp={onEnterKey} onChange={(e) => setCurrentTodo(e.target.value)} inputProps={{ minLength: 1 }} />
+          <TextField sx={{ width: 500 }} type="text" label="Add your todo" value={currentTodo} onKeyUp={onEnterKey} onChange={(e) => setCurrentTodo(e.target.value)} inputProps={{ minLength: 1 }} />
         </Grid>
         <Grid item>
-          <Button variant="contained" onClick={onAddTodo}>Add</Button>
+          <Button style={{ backgroundColor: 'green', color: 'white' }} variant="contained" onClick={onAddTodo}>Add</Button>
         </Grid>
       </Grid>
       <TodoList />
       <Grid spacing={2} container justifyContent="center" alignItem="center">
         <Grid item>
-          <TextField fullWidth type="text" label="Search your todos" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+          <TextField sx={{ width: 300 }} type="text" label="Search your todos" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
         </Grid>
         <Grid item>
           <Select value={showState} onChange={(e) => setShowState(e.target.value)}>
@@ -79,12 +79,12 @@ function App() {
           </Select>
         </Grid>
       </Grid>
-      <Grid spacing={2} container justifyContent="center" alignItems="center">
+      <Grid style={{paddingTop: '16px'}} spacing={2} container justifyContent="center" alignItems="center">
         <Grid item>
-          <Button variant="contained" onClick={onRemoveTodos}>Remove completed todos</Button>
+          <Button style={{ backgroundColor: 'red', color: 'white' }} variant="contained" onClick={onRemoveTodos}>Remove completed todos</Button>
         </Grid>
         <Grid item>
-          <Button variant="contained" onClick={onClearTodos}>Clear all todos</Button>
+          <Button style={{ backgroundColor: 'red', color: 'white' }} variant="contained" onClick={onClearTodos}>Clear all todos</Button>
         </Grid>
       </Grid>
     </Box>

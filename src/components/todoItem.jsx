@@ -34,10 +34,10 @@ function TodoItem(props) {
         <Checkbox checked={completed} onChange={() => onTodoCheckboxChange(id)} />
       </Grid>
       <Grid item>
-        <TextField value={raw} onChange={(e) => onTodoTextInputChange(id, e.target.value)} onKeyUp={(e) => onDeleteKeyOrBackspace(e, raw, id)} />
+        <TextField inputProps={{ style: { textDecoration: completed === true ? 'line-through' : null } }} sx={{ width: 500 }} value={raw} onChange={(e) => onTodoTextInputChange(id, e.target.value)} onKeyUp={(e) => onDeleteKeyOrBackspace(e, raw, id)} />
       </Grid>
       <Grid item>
-        <Button variant="contained" onClick={() => onDeleteTodo(id)}>Delete</Button>
+        <Button style={{ backgroundColor: 'red', color: 'white' }} variant="contained" onClick={() => onDeleteTodo(id)}>Delete</Button>
       </Grid>
     </Grid>
   );
