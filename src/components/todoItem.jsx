@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Grid, Checkbox, TextField, Button } from "@mui/material";
 import { useAtom, useAtomValue } from "jotai";
 import { todosModelAtom, addCompletionDateAtom } from "../atoms";
@@ -5,6 +6,7 @@ import { todosModelAtom, addCompletionDateAtom } from "../atoms";
 function TodoItem(props) {
   const [todosModel, setTodosModel] = useAtom(todosModelAtom);
   const addCompletionDate = useAtomValue(addCompletionDateAtom);
+  const [focus, setFocus] = useState(false);
   const { id, raw, completed } = props;
 
   function onTodoCheckboxChange(id) {
@@ -28,13 +30,21 @@ function TodoItem(props) {
     }
   }
 
+  function onFocus() {
+    setFocus(true);
+  }
+
+  function onBlur() {
+    setFocus(false);
+  }
+
   return (
     <Grid spacing={1} container justifyContent="center" alignItems="center">
       <Grid item>
         <Checkbox checked={completed} onChange={() => onTodoCheckboxChange(id)} />
       </Grid>
       <Grid item>
-        <TextField inputProps={{ style: { textDecoration: completed === true ? 'line-through' : null } }} sx={{ width: 500 }} value={raw} onChange={(e) => onTodoTextInputChange(id, e.target.value)} onKeyUp={(e) => onDeleteKeyOrBackspace(e, raw, id)} />
+        <TextField disabled={completed} id={id} onFocus={onFocus} onBlur={onBlur} InputProps={{style: { fontWeight: focus === true ? 500 : 400 }}} inputProps={{ style: { textDecoration: completed === true ? 'line-through' : null } }} sx={{ width: 500 }} value={raw} onChange={(e) => onTodoTextInputChange(id, e.target.value)} onKeyUp={(e) => onDeleteKeyOrBackspace(e, raw, id)} />
       </Grid>
       <Grid item>
         <Button style={{ backgroundColor: 'red', color: 'white' }} variant="contained" onClick={() => onDeleteTodo(id)}>Delete</Button>
