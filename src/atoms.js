@@ -11,8 +11,7 @@ function getOsLineEnding() {
   // UNIX operating systems use '\n' to end a line
   // Windows and other operating systems use '\r\n' to end a line
   // This matters for the output of our todo.txt file
-  // eslint-disable-next-line no-bitwise
-  if (isUNIX() || isMacOS() | isLinux() || isIOS() || isAndroid()) {
+  if (isUNIX() || isMacOS() || isLinux() || isIOS() || isAndroid()) {
     return '\n';
   }
   return '\r\n';
