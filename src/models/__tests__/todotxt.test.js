@@ -255,39 +255,27 @@ describe('todotxt', () => {
       expect(listD.todos[2].raw).toBe(inputC);
     });
 
-    it('should be able to toggle todos', ({ expect }) => {
-      const inputA = 'x (A) 2021-01-01 2021-01-02 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
-      // eslint-disable-next-line max-len
-      const inputB = 'x (A) 2021-01-01 2021-01-02 yinkel @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
-      const inputC = 'meow';
-      const list = new todotxt.TodoListModel([], '\n');
-      const listA = list.addTodo(inputA);
-      const listB = listA.addTodo(inputB);
-      const listC = listB.addTodo(inputC);
-      const listD = listC.toggleTodo(listC.todos[1].id);
-      const listE = listD.toggleTodo(listD.todos[2].id);
-      expect(listE.todos.length).toBe(3);
-      expect(listE.todos[0].completed).toBe(true);
-      expect(listE.todos[1].completed).toBe(false);
-      expect(listE.todos[2].completed).toBe(true);
+    it('should be able to set a todo to completed', ({ expect }) => {
+      const todoA = '(A) Thank Mom for the meatballs @phone';
+      const todoB = '(B) Schedule Goodwill pickup +GarageSale @phone';
+      const todoC = 'Post signs around the neighborhood +GarageSale';
+      const listA = new todotxt.TodoListModel([], '\n');
+      const listB = listA.addTodos([todoA, todoB, todoC], false);
+      const listC = listB.toggleTodo(listB.todos[0].id, false);
+      expect(listC.todos.length).toBe(3);
+      expect(listC.todos[2].raw).toBe('x (A) Thank Mom for the meatballs @phone');
     });
 
-    it('should be able to toggle todos without adding a completion date', ({ expect }) => {
-      const inputA = 'x (A) 2021-01-01 2021-01-02 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
-      // eslint-disable-next-line max-len
-      const inputB = 'x (A) 2021-01-01 2021-01-02 yinkel @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
-      const inputC = 'meow';
-      const list = new todotxt.TodoListModel([], '\n');
-      const listA = list.addTodo(inputA);
-      const listB = listA.addTodo(inputB);
-      const listC = listB.addTodo(inputC, false);
-      const listD = listC.toggleTodo(listC.todos[1].id);
-      const listE = listD.toggleTodo(listD.todos[2].id, false);
-      expect(listE.todos.length).toBe(3);
-      expect(listE.todos[0].completed).toBe(true);
-      expect(listE.todos[1].completed).toBe(false);
-      expect(listE.todos[2].completed).toBe(true);
-      expect(listE.todos[2].raw).toBe(`x ${inputC}`);
+    it('should be able set a todo to not completed', ({ expect }) => {
+      const todoA = '(A) Thank Mom for the meatballs @phone';
+      const todoB = '(B) Schedule Goodwill pickup +GarageSale @phone';
+      const todoC = 'x Post signs around the neighborhood +GarageSale';
+      const todoD = 'x (A) Eat da spaghetti @phone'
+      const listA = new todotxt.TodoListModel([], '\n');
+      const listB = listA.addTodos([todoA, todoB, todoC, todoD]);
+      const listC = listB.toggleTodo(listB.todos[3].id, false);
+      expect(listC.todos.length).toBe(4);
+      expect(listC.todos[2].raw).toBe('(A) Eat da spaghetti @phone');
     });
 
     it('should be able to convert to string', ({ expect }) => {

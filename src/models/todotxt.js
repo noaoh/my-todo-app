@@ -63,11 +63,16 @@ class TodoModel {
           insertionPoint += 1;
         }
         tokens.splice(insertionPoint, 0, completionDate);
+        const newRaw = tokens.join(' ');
+        return new TodoModel({
+          ...this, completionDate, completed: completeValue, raw: newRaw,
+        });
+      } else {
+        const newRaw = tokens.join(' ');
+        return new TodoModel({
+          ...this, completed: completeValue, raw: newRaw,
+        });
       }
-      const newRaw = tokens.join(' ');
-      return new TodoModel({
-        ...this, completionDate, completed: completeValue, raw: newRaw,
-      });
     } if (completeValue === false) {
       const states = [MATCH_TYPES.COMPLETED, MATCH_TYPES.COMPLETION_DATE];
       const tokens = this.raw.split(' ');
@@ -169,12 +174,28 @@ class TodoListModel {
   }
 
   toggleTodo(id, addCompletionDate = true) {
-    const newList = this.todos.map((todo) => {
-      if (id === todo.id) {
-        return todo.setCompleted(!todo.completed, addCompletionDate);
-      }
-      return todo;
-    });
+    const todo = this.todos.find((todo) => todo.id === id);
+    if (todo.completed === false) {
+      return this.setTodoCompleted(todo, addCompletionDate);
+    } else {
+      return this.setTodoNotCompleted(todo);
+    }
+  }
+
+  setTodoCompleted(todo, addCompletionDate) {
+    const completedTodo = todo.setCompleted(true, addCompletionDate);
+    const withoutCompletedTodo = this.todos.filter((t) => t.id !== todo.id); 
+    const newList = [...withoutCompletedTodo, completedTodo];
+    return new TodoListModel(newList, this.lineEnding);
+  }
+
+  setTodoNotCompleted(todo) {
+    const notCompletedTodo = todo.setCompleted(false);
+    const withoutNotCompletedTodo = this.todos.filter((t) => t.id !== todo.id);
+    const lastNotCompletedTodoIndex = withoutNotCompletedTodo.findLastIndex((todo) => todo.completed === false);
+    const todosBeforeLastNotCompletedTodo = withoutNotCompletedTodo.slice(0, lastNotCompletedTodoIndex + 1);
+    const todosAfterLastNotCompletedTodo = withoutNotCompletedTodo.slice(lastNotCompletedTodoIndex + 1);
+    const newList = [...todosBeforeLastNotCompletedTodo, notCompletedTodo, ...todosAfterLastNotCompletedTodo];
     return new TodoListModel(newList, this.lineEnding);
   }
 
