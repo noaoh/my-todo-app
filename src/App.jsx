@@ -51,9 +51,11 @@ function App() {
         <Grid item>
           <FileImport todosModel={todosModel} setTodosModel={setTodosModel} />
         </Grid>
-        <Grid item>
-            <Button style={{ backgroundColor: 'green', color: 'white' }} variant="contained" onClick={exportTodos}>Export</Button>
-        </Grid>
+        {todosModel.isEmpty ? null : (
+          <Grid item>
+              <Button style={{ backgroundColor: 'green', color: 'white' }} variant="contained" onClick={exportTodos}>Export</Button>
+          </Grid>
+        )}
         <Grid item>
           <Settings />
         </Grid>
@@ -67,26 +69,30 @@ function App() {
         </Grid>
       </Grid>
       <TodoList />
-      <Grid spacing={2} container justifyContent="center" alignItem="center">
-        <Grid item>
-          <TextField sx={{ width: 300 }} type="text" label="Search your todos" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+      {todosModel.isEmpty ? null : (
+        <Grid spacing={2} container justifyContent="center" alignItem="center">
+          <Grid item>
+            <TextField sx={{ width: 300 }} type="text" label="Search your todos" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+          </Grid>
+          <Grid item>
+            <Select value={showState} onChange={(e) => setShowState(e.target.value)}>
+              <MenuItem value={VIEW_STATES.ALL}>Show all</MenuItem>
+              <MenuItem value={VIEW_STATES.ACTIVE}>Show active</MenuItem>
+              <MenuItem value={VIEW_STATES.COMPLETED}>Show completed</MenuItem>
+            </Select>
+          </Grid>
         </Grid>
-        <Grid item>
-          <Select value={showState} onChange={(e) => setShowState(e.target.value)}>
-            <MenuItem value={VIEW_STATES.ALL}>Show all</MenuItem>
-            <MenuItem value={VIEW_STATES.ACTIVE}>Show active</MenuItem>
-            <MenuItem value={VIEW_STATES.COMPLETED}>Show completed</MenuItem>
-          </Select>
+      )}
+      {todosModel.isEmpty ? null : (
+        <Grid style={{paddingTop: '16px'}} spacing={2} container justifyContent="center" alignItems="center">
+          <Grid item>
+            <Button style={{ backgroundColor: 'red', color: 'white' }} variant="contained" onClick={onRemoveTodos}>Remove completed todos</Button>
+          </Grid>
+          <Grid item>
+            <Button style={{ backgroundColor: 'red', color: 'white' }} variant="contained" onClick={onClearTodos}>Clear all todos</Button>
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid style={{paddingTop: '16px'}} spacing={2} container justifyContent="center" alignItems="center">
-        <Grid item>
-          <Button style={{ backgroundColor: 'red', color: 'white' }} variant="contained" onClick={onRemoveTodos}>Remove completed todos</Button>
-        </Grid>
-        <Grid item>
-          <Button style={{ backgroundColor: 'red', color: 'white' }} variant="contained" onClick={onClearTodos}>Clear all todos</Button>
-        </Grid>
-      </Grid>
+      )}
     </Box>
   );
 }

@@ -415,4 +415,18 @@ describe('todotxt', () => {
     const newList = list.clearTodos();
     expect(newList.todos.length).toBe(0);
   });
+
+  it('should return isEmpty as true if there are no todos', ({ expect }) => {
+    const list = new todotxt.TodoListModel([], '\n');
+    expect(list.isEmpty).toBe(true);
+  });
+
+  it('should return isEmpty as false if there are todos', ({ expect }) => {
+    const inputA = 'meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
+    const inputB = 'yinkel @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
+    const inputC = 'x meow';
+    const inputD = 'x (A) 2023-04-13 2023-04-13 meow';
+    const list = new todotxt.TodoListModel([], '\n').addTodos([inputA, inputB, inputC, inputD], false);
+    expect(list.isEmpty).toBe(false);
+  });
 });

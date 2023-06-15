@@ -187,6 +187,10 @@ class TodoListModel {
       todos: this.todos.map((todo) => todo.toJSON()),
     };
   }
+
+  get isEmpty() {
+    return this.todos.length === 0;
+  }
 }
 
 export { isoTodayDate, TodoModel, TodoListModel };
