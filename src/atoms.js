@@ -57,7 +57,12 @@ const filteredTodosAtom = atom((get) => {
   }
 });
 
+const todoListIsEmptyAtom = atom((get) => {
+  const todosModel = get(todosModelAtom);
+  return todosModel.isEmpty;
+});
+
 /* eslint-disable max-len */
 export {
-  currentTodoAtom, searchQueryAtom, addCreationDateAtom, addCompletionDateAtom, showStateAtom, todosModelAtom, filteredTodosAtom,
+  currentTodoAtom, searchQueryAtom, addCreationDateAtom, addCompletionDateAtom, showStateAtom, todosModelAtom, filteredTodosAtom, todoListIsEmptyAtom,
 };

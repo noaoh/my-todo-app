@@ -6,7 +6,7 @@ import { VIEW_STATES } from './constants'
 import { TodoList } from './components/todoList';
 import { FileImport } from './components/fileInput';
 import { Settings } from './components/settings';
-import { addCreationDateAtom, currentTodoAtom, searchQueryAtom, showStateAtom, todosModelAtom } from './atoms';
+import { addCreationDateAtom, currentTodoAtom, searchQueryAtom, showStateAtom, todosModelAtom, todoListIsEmptyAtom } from './atoms';
 
 function App() {
   const [todosModel, setTodosModel] = useAtom(todosModelAtom);
@@ -14,6 +14,7 @@ function App() {
   const [showState, setShowState] = useAtom(showStateAtom);
   const addCreationDate = useAtomValue(addCreationDateAtom);
   const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom);
+  const todoListIsEmpty = useAtomValue(todoListIsEmptyAtom);
 
   function onAddTodo() {
     if (currentTodo.length !== 0) {
@@ -51,7 +52,7 @@ function App() {
         <Grid item>
           <FileImport todosModel={todosModel} setTodosModel={setTodosModel} />
         </Grid>
-        {todosModel.isEmpty ? null : (
+        {todoListIsEmpty ? null : (
           <Grid item>
               <Button style={{ backgroundColor: 'green', color: 'white' }} variant="contained" onClick={exportTodos}>Export</Button>
           </Grid>
@@ -69,7 +70,7 @@ function App() {
         </Grid>
       </Grid>
       <TodoList />
-      {todosModel.isEmpty ? null : (
+      {todoListIsEmpty ? null : (
         <Grid spacing={2} container justifyContent="center" alignItem="center">
           <Grid item>
             <TextField sx={{ width: 300 }} type="text" label="Search your todos" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
@@ -83,7 +84,7 @@ function App() {
           </Grid>
         </Grid>
       )}
-      {todosModel.isEmpty ? null : (
+      {todoListIsEmpty ? null : (
         <Grid style={{paddingTop: '16px'}} spacing={2} container justifyContent="center" alignItems="center">
           <Grid item>
             <Button style={{ backgroundColor: 'red', color: 'white' }} variant="contained" onClick={onRemoveTodos}>Remove completed todos</Button>
