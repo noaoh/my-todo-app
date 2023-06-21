@@ -44,10 +44,10 @@ function TodoItem(props) {
         <Checkbox checked={completed} onChange={() => onTodoCheckboxChange(id)} />
       </Grid>
       <Grid item>
-        <TextField disabled={completed} id={id} onFocus={onFocus} onBlur={onBlur} InputProps={{style: { fontWeight: focus === true ? 500 : 400 }}} inputProps={{ style: { textDecoration: completed === true ? 'line-through' : null } }} sx={{ width: 500 }} value={raw} onChange={(e) => onTodoTextInputChange(id, e.target.value)} onKeyUp={(e) => onDeleteKeyOrBackspace(e, raw, id)} />
+        <TextField disabled={completed} id={id} onFocus={onFocus} onBlur={onBlur} InputProps={{style: { fontWeight: focus === true ? 450 : 400 }}} inputProps={{ style: { textDecoration: completed === true ? 'line-through' : null, color: '#1F2933' } }} sx={{ width: 500 }} value={raw} onChange={(e) => onTodoTextInputChange(id, e.target.value)} onKeyUp={(e) => onDeleteKeyOrBackspace(e, raw, id)} />
       </Grid>
       <Grid item>
-        <Button style={{ backgroundColor: 'red', color: 'white' }} variant="contained" onClick={() => onDeleteTodo(id)}>Delete</Button>
+        <Button variant="contained" style={{ backgroundColor: '#F5F7FA', color: '#F9703E' }} onClick={() => onDeleteTodo(id)}>Delete</Button>
       </Grid>
     </Grid>
   );

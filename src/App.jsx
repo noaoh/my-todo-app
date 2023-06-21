@@ -1,12 +1,12 @@
 import FileSaver from 'file-saver';
 import { Box, TextField, Button, Select, MenuItem, Grid } from '@mui/material';
 import { useAtom, useAtomValue } from 'jotai';
-import './App.css'
 import { VIEW_STATES } from './constants'
 import { TodoList } from './components/todoList';
 import { FileImport } from './components/fileInput';
 import { Settings } from './components/settings';
 import { addCreationDateAtom, currentTodoAtom, searchQueryAtom, showStateAtom, todosModelAtom, todoListIsEmptyAtom } from './atoms';
+import { Header } from './components/header';
 
 function App() {
   const [todosModel, setTodosModel] = useAtom(todosModelAtom);
@@ -48,13 +48,14 @@ function App() {
 
   return (
     <Box>
-      <Grid spacing={2} container justifyContent="center" alignItems="center">
+      <Header />
+      <Grid style={{'margin-top': '5px'}} spacing={2} container justifyContent="center" alignItems="center">
         <Grid item>
-          <FileImport todosModel={todosModel} setTodosModel={setTodosModel} />
+          <FileImport />
         </Grid>
         {todoListIsEmpty ? null : (
           <Grid item>
-              <Button style={{ backgroundColor: 'green', color: 'white' }} variant="contained" onClick={exportTodos}>Export</Button>
+              <Button style={{ backgroundColor: '#F5F7FA', color: '#F9703E' }} variant="contained" onClick={exportTodos}>Export</Button>
           </Grid>
         )}
         <Grid item>
@@ -63,17 +64,17 @@ function App() {
       </Grid>
       <Grid spacing={2} container justifyContent="center" alignItem="center">
         <Grid item>
-          <TextField sx={{ width: 500 }} type="text" label="Add your todo" value={currentTodo} onKeyUp={onEnterKey} onChange={(e) => setCurrentTodo(e.target.value)} inputProps={{ minLength: 1 }} />
+          <TextField sx={{ width: 500 }} type="text" label="Add your todo" value={currentTodo} onKeyUp={onEnterKey} onChange={(e) => setCurrentTodo(e.target.value)} inputProps={{ minLength: 1, color: '#9AA5B1' }} />
         </Grid>
         <Grid item>
-          <Button style={{ backgroundColor: 'green', color: 'white' }} variant="contained" onClick={onAddTodo}>Add</Button>
+          <Button style={{ backgroundColor: '#F9703E', color: 'white' }} variant="contained" onClick={onAddTodo}>Add</Button>
         </Grid>
       </Grid>
       <TodoList />
       {todoListIsEmpty ? null : (
         <Grid spacing={2} container justifyContent="center" alignItem="center">
           <Grid item>
-            <TextField sx={{ width: 300 }} type="text" label="Search your todos" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+            <TextField sx={{ width: 300 }} inputProps={{ color: '#9AA5B1' }} type="text" label="Search your todos" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
           </Grid>
           <Grid item>
             <Select value={showState} onChange={(e) => setShowState(e.target.value)}>
@@ -87,10 +88,10 @@ function App() {
       {todoListIsEmpty ? null : (
         <Grid style={{paddingTop: '16px'}} spacing={2} container justifyContent="center" alignItems="center">
           <Grid item>
-            <Button style={{ backgroundColor: 'red', color: 'white' }} variant="contained" onClick={onRemoveTodos}>Remove completed todos</Button>
+            <Button style={{ backgroundColor: '#F5F7FA', color: '#F9703E' }} variant="contained" onClick={onRemoveTodos}>Remove completed todos</Button>
           </Grid>
           <Grid item>
-            <Button style={{ backgroundColor: 'red', color: 'white' }} variant="contained" onClick={onClearTodos}>Clear all todos</Button>
+            <Button style={{ backgroundColor: '#F5F7FA', color: '#7B8794' }} variant="contained" onClick={onClearTodos}>Clear all todos</Button>
           </Grid>
         </Grid>
       )}

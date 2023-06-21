@@ -20,7 +20,7 @@ function Settings() {
     return (
         <>
             <IconButton onClick={handleMenuClick} edge='start' color='inherit' aria-label='menu' >
-                <SettingsIcon />
+                <SettingsIcon sx={{ color: '#323F4B' }} />
             </IconButton>
             <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
                 <MenuItem>
