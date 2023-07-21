@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Grid, Checkbox, TextField, Button } from "@mui/material";
-import { useAtom, useAtomValue } from "jotai";
-import { todosModelAtom, addCompletionDateAtom } from "../atoms";
+import { Box, Checkbox, TextField, Button } from '@mui/material';
+import { useAtom, useAtomValue } from 'jotai';
+import { todosModelAtom, addCompletionDateAtom } from '../atoms';
 
 function TodoItem(props) {
   const [todosModel, setTodosModel] = useAtom(todosModelAtom);
@@ -39,17 +39,11 @@ function TodoItem(props) {
   }
 
   return (
-    <Grid spacing={1} container justifyContent="center" alignItems="center">
-      <Grid item>
+    <Box display='flex' alignItems='center' justifyContent='center' height={'100%'} width={'100%'} gap={1}>
         <Checkbox checked={completed} onChange={() => onTodoCheckboxChange(id)} />
-      </Grid>
-      <Grid item>
-        <TextField disabled={completed} id={id} onFocus={onFocus} onBlur={onBlur} InputProps={{style: { fontWeight: focus === true ? 450 : 400 }}} inputProps={{ style: { textDecoration: completed === true ? 'line-through' : null, color: '#1F2933' } }} sx={{ width: 500 }} value={raw} onChange={(e) => onTodoTextInputChange(id, e.target.value)} onKeyUp={(e) => onDeleteKeyOrBackspace(e, raw, id)} />
-      </Grid>
-      <Grid item>
-        <Button variant="contained" style={{ backgroundColor: '#F5F7FA', color: '#F9703E' }} onClick={() => onDeleteTodo(id)}>Delete</Button>
-      </Grid>
-    </Grid>
+        <TextField disabled={completed} id={id} onFocus={onFocus} onBlur={onBlur} InputProps={{style: { fontWeight: focus === true ? 425 : 400 }}} inputProps={{ style: { textDecoration: completed === true ? 'line-through' : null, color: '#1F2933' } }} value={raw} onChange={(e) => onTodoTextInputChange(id, e.target.value)} onKeyUp={(e) => onDeleteKeyOrBackspace(e, raw, id)} />
+        <Button variant='contained' style={{ backgroundColor: '#F5F7FA', color: '#F9703E' }} onClick={() => onDeleteTodo(id)}>Delete</Button>
+    </Box>
   );
 }
 
