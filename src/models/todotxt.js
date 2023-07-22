@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { format, startOfToday } from 'date-fns';
-import { MATCH_TYPES, VIEW_STATES } from '../constants';
+import { MATCH_TYPES, VIEW_STATES, osLineEnding } from '../constants';
 import { findMatch, parseTodoTxt } from './parser';
 
 const isoTodayDate = () => format(startOfToday(), 'yyyy-MM-dd');
@@ -212,6 +212,54 @@ class TodoListModel {
   get isEmpty() {
     return this.todos.length === 0;
   }
+
+  get length() {
+    return this.todos.length;
+  }
 }
 
-export { isoTodayDate, TodoModel, TodoListModel };
+class TodoHistoryModel {
+  constructor(history, pos) {
+    this.history = history || [{ todos: [] }];
+    this.pos = pos || 0;
+  }
+
+  get length() {
+    return this.history.length;
+  }
+
+  addState(todos) {
+    const state = todos.toJSON();
+    const history = [...this.history, { ...state }];
+    const pos = this.pos + 1;
+    return new TodoHistoryModel(history, pos);
+  }
+
+  currentState() {
+    return this.history[this.pos];
+  }
+
+  undo() {
+    if (this.pos === 0) {
+      return this;
+    }
+    const pos = this.pos - 1;
+    return new TodoHistoryModel(this.history, pos);
+  }
+
+  redo() {
+    if (this.pos === this.history.length - 1) {
+      return this;
+    }
+    const pos = this.pos + 1;
+    return new TodoHistoryModel(this.history, pos);
+  }
+
+  toTodoModelList() {
+    const { todos } = this.currentState();
+    const todoList = todos.map((todo) => new TodoModel(todo));
+    return new TodoListModel(todoList, osLineEnding);
+  }
+}
+
+export { isoTodayDate, TodoModel, TodoListModel, TodoHistoryModel };

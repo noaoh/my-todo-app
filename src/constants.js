@@ -1,3 +1,5 @@
+import { getOsLineEnding } from "./utils";
+
 const VIEW_STATES = {
   ALL: 'all',
   ACTIVE: 'active',
@@ -34,6 +36,8 @@ const onlyOneMatchTypes = [
   MATCH_TYPES.CREATION_DATE,
 ];
 
+const osLineEnding = getOsLineEnding();
+
 export {
-  onlyOneMatchTypes, initialTodoState, VIEW_STATES, MATCH_TYPES,
+  onlyOneMatchTypes, initialTodoState, VIEW_STATES, MATCH_TYPES, osLineEnding,
 };

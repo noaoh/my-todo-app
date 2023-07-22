@@ -13,7 +13,6 @@ function useWindowWidth() {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-    console.log(windowWidth);
   });
 
   return windowWidth;
