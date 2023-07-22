@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Box, Checkbox, TextField, Button } from '@mui/material';
 import { useAtom, useAtomValue } from 'jotai';
 import { todosModelAtom, todosHistoryAtom, addCompletionDateAtom } from '../atoms';
-import { useWindowWidth } from '../hooks/useWindowWidth';
+import useWindowWidth from '../hooks/useWindowWidth';
 
 function TodoItem(props) {
   const [todosModel, setTodosModel] = useAtom(todosModelAtom);
