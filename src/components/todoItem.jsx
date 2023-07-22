@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Box, Checkbox, TextField, Button } from '@mui/material';
 import { useAtom, useAtomValue } from 'jotai';
 import { todosModelAtom, addCompletionDateAtom } from '../atoms';
+import { useWindowWidth } from '../hooks/useWindowWidth';
 
 function TodoItem(props) {
   const [todosModel, setTodosModel] = useAtom(todosModelAtom);
   const addCompletionDate = useAtomValue(addCompletionDateAtom);
   const [focus, setFocus] = useState(false);
+  const windowWidth = useWindowWidth();
   const { id, raw, completed } = props;
 
   function onTodoCheckboxChange(id) {
@@ -39,9 +41,9 @@ function TodoItem(props) {
   }
 
   return (
-    <Box display='flex' alignItems='center' justifyContent='center' height={'100%'} width={'100%'} gap={1}>
+    <Box display='flex' alignItems='center' justifyContent='center' height={'100%'} width={'100%'} gap={2}>
         <Checkbox checked={completed} onChange={() => onTodoCheckboxChange(id)} />
-        <TextField disabled={completed} id={id} onFocus={onFocus} onBlur={onBlur} InputProps={{style: { fontWeight: focus === true ? 425 : 400 }}} inputProps={{ style: { textDecoration: completed === true ? 'line-through' : null, color: '#1F2933' } }} value={raw} onChange={(e) => onTodoTextInputChange(id, e.target.value)} onKeyUp={(e) => onDeleteKeyOrBackspace(e, raw, id)} />
+        <TextField sx={{ width: windowWidth * .40 }} disabled={completed} id={id} onFocus={onFocus} onBlur={onBlur} InputProps={{style: { fontWeight: focus === true ? 425 : 400 }}} inputProps={{ style: { textDecoration: completed === true ? 'line-through' : null, color: '#1F2933' } }} value={raw} onChange={(e) => onTodoTextInputChange(id, e.target.value)} onKeyUp={(e) => onDeleteKeyOrBackspace(e, raw, id)} />
         <Button variant='contained' style={{ backgroundColor: '#F5F7FA', color: '#F9703E' }} onClick={() => onDeleteTodo(id)}>Delete</Button>
     </Box>
   );

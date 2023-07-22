@@ -1,5 +1,6 @@
 import FileSaver from 'file-saver';
-import { Box, TextField, Button, Select, MenuItem, Grid } from '@mui/material';
+import { Grid, TextField, Button, Select, MenuItem } from '@mui/material';
+import { useWindowWidth } from './hooks/useWindowWidth';
 import { useAtom, useAtomValue } from 'jotai';
 import { VIEW_STATES } from './constants'
 import { TodoList } from './components/todoList';
@@ -15,6 +16,7 @@ function App() {
   const addCreationDate = useAtomValue(addCreationDateAtom);
   const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom);
   const todoListIsEmpty = useAtomValue(todoListIsEmptyAtom);
+  const windowWidth = useWindowWidth();
 
   function onAddTodo() {
     if (currentTodo.length !== 0) {
@@ -47,9 +49,9 @@ function App() {
   }
 
   return (
-    <Box>
+    <>
       <Header />
-      <Grid style={{'margin-top': '5px'}} spacing={2} container justifyContent="center" alignItems="center">
+      <Grid sx={{marginTop: '5px' }} spacing={2} container justifyContent="center" alignItems="center">
         <Grid item>
           <FileImport />
         </Grid>
@@ -62,9 +64,9 @@ function App() {
           <Settings />
         </Grid>
       </Grid>
-      <Grid spacing={2} container justifyContent="center" alignItem="center">
+      <Grid sx={{marginLeft: '4px', marginTop: '2px' }} spacing={2} container justifyContent="center" alignItem="center">
         <Grid item>
-          <TextField sx={{ width: 500 }} type="text" label="Add your todo" value={currentTodo} onKeyUp={onEnterKey} onChange={(e) => setCurrentTodo(e.target.value)} inputProps={{ minLength: 1, color: '#9AA5B1' }} />
+          <TextField sx={{ width: windowWidth * .40 }} type="text" label="Add your todo" value={currentTodo} onKeyUp={onEnterKey} onChange={(e) => setCurrentTodo(e.target.value)} inputProps={{ minLength: 1, color: '#9AA5B1' }} />
         </Grid>
         <Grid item>
           <Button style={{ backgroundColor: '#F9703E', color: 'white' }} variant="contained" onClick={onAddTodo}>Add</Button>
@@ -72,9 +74,9 @@ function App() {
       </Grid>
       <TodoList />
       {todoListIsEmpty ? null : (
-        <Grid spacing={2} container justifyContent="center" alignItem="center">
+        <Grid sx={{ marginLeft: '23px' }} spacing={2} container justifyContent="center" alignItem="center">
           <Grid item>
-            <TextField sx={{ width: 300 }} inputProps={{ color: '#9AA5B1' }} type="text" label="Search your todos" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+            <TextField sx={{ width: windowWidth * .40 }} inputProps={{ color: '#9AA5B1' }} type="text" label="Search your todos" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
           </Grid>
           <Grid item>
             <Select value={showState} onChange={(e) => setShowState(e.target.value)}>
@@ -95,7 +97,7 @@ function App() {
           </Grid>
         </Grid>
       )}
-    </Box>
+    </>
   );
 }
 
