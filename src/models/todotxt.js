@@ -121,7 +121,7 @@ class TodoListModel {
 
   addTodo(todo, addCreationDate = true) {
     const parsedTodo = addCreationDate ? TodoModel.parse(todo).setCreationDate() : TodoModel.parse(todo);
-    return new TodoListModel([...this.todos, parsedTodo], this.lineEnding);
+    return new TodoListModel([parsedTodo, ...this.todos], this.lineEnding);
   }
 
   addTodos(todos, addCreationDate = true) {
@@ -129,7 +129,7 @@ class TodoListModel {
     const parsedTodos = todos.map((todo) => {
       return addCreationDate ? TodoModel.parse(todo).setCreationDate() : TodoModel.parse(todo);
     });
-    return new TodoListModel([...this.todos, ...parsedTodos], this.lineEnding);
+    return new TodoListModel([...parsedTodos, ...this.todos], this.lineEnding);
   }
 
   importTodos(todoFile, addCreationDate = true) {
@@ -141,11 +141,12 @@ class TodoListModel {
     if (showState === VIEW_STATES.ACTIVE) {
       const result = this.todos.filter((todo) => todo.completed === false);
       return result;
-    } if (showState === VIEW_STATES.COMPLETED) {
+    } else if (showState === VIEW_STATES.COMPLETED) {
       const result = this.todos.filter((todo) => todo.completed === true);
       return result;
+    } else {
+      return this.todos;
     }
-    return this.todos;
   }
 
   removeCompleted() {

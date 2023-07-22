@@ -16,7 +16,7 @@ describe('todotxt', () => {
   });
 
   describe('TodoModel', () => {
-    it('should parse a todo string', (g) => {
+    it('should parse a todo string', () => {
       const input = 'x (A) 2021-01-01 2021-01-02 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const todo = todotxt.TodoModel.parse(input);
       expect(todo.completed).toBe(true);
@@ -31,7 +31,7 @@ describe('todotxt', () => {
       expect(typeof todo.id).toBe('string');
     });
 
-    it('should be able to set completed to false with priority and creation date present', (g) => {
+    it('should be able to set completed to false with priority and creation date present', () => {
       const input = 'x (A) 2021-01-03 2021-01-02 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const todo = todotxt.TodoModel.parse(input);
       const newTodo = todo.setCompleted(false);
@@ -40,7 +40,7 @@ describe('todotxt', () => {
       expect(newTodo.id).toBe(todo.id);
     });
 
-    it('should be able to set completed to false with priority present', (g) => {
+    it('should be able to set completed to false with priority present', () => {
       const input = 'x (A) 2021-01-03 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const todo = todotxt.TodoModel.parse(input);
       const newTodo = todo.setCompleted(false);
@@ -49,7 +49,7 @@ describe('todotxt', () => {
       expect(newTodo.id).toBe(todo.id);
     });
 
-    it('should be able to set completed to false with neither priority nor creation date present', (g) => {
+    it('should be able to set completed to false with neither priority nor creation date present', () => {
       const input = 'x meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const todo = todotxt.TodoModel.parse(input);
       const newTodo = todo.setCompleted(false);
@@ -58,7 +58,7 @@ describe('todotxt', () => {
       expect(newTodo.id).toBe(todo.id);
     });
 
-    it('should be able to set completed to true with priority and creation date present', (g) => {
+    it('should be able to set completed to true with priority and creation date present', () => {
       const input = '(A) 2021-01-02 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const todo = todotxt.TodoModel.parse(input);
       const newTodo = todo.setCompleted(true);
@@ -69,7 +69,7 @@ describe('todotxt', () => {
       expect(newTodo.id).toBe(todo.id);
     });
 
-    it('should be able to set completed to true with priority present', (g) => {
+    it('should be able to set completed to true with priority present', () => {
       const input = '(A) meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const todo = todotxt.TodoModel.parse(input);
       const newTodo = todo.setCompleted(true, true);
@@ -79,7 +79,7 @@ describe('todotxt', () => {
       expect(newTodo.id).toBe(todo.id);
     });
 
-    it('should be able to set completed to true with creation date present', (g) => {
+    it('should be able to set completed to true with creation date present', () => {
       const input = '2023-01-01 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const todo = todotxt.TodoModel.parse(input);
       const newTodo = todo.setCompleted(true);
@@ -90,7 +90,7 @@ describe('todotxt', () => {
       expect(newTodo.id).toBe(todo.id);
     });
 
-    it('should be able to set completed to true with neither priority nor creation date present', (g) => {
+    it('should be able to set completed to true with neither priority nor creation date present', () => {
       const input = 'meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const todo = todotxt.TodoModel.parse(input);
       const newTodo = todo.setCompleted(true);
@@ -100,7 +100,7 @@ describe('todotxt', () => {
       expect(newTodo.id).toBe(todo.id);
     });
 
-    it('should not set a creation date if one is already present', (g) => {
+    it('should not set a creation date if one is already present', () => {
       const input = 'x 2023-04-16 2023-04-13 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const todo = todotxt.TodoModel.parse(input);
       const newTodo = todo.setCreationDate();
@@ -110,7 +110,7 @@ describe('todotxt', () => {
     });
 
     // eslint-disable-next-line max-len
-    it('should be able to set completed to true and not add a completion date with priority and creation date present', (g) => {
+    it('should be able to set completed to true and not add a completion date with priority and creation date present', () => {
       const input = '(A) 2021-01-02 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const todo = todotxt.TodoModel.parse(input);
       const newTodo = todo.setCompleted(true, false);
@@ -119,7 +119,7 @@ describe('todotxt', () => {
       expect(newTodo.id).toBe(todo.id);
     });
 
-    it('should be able to set completed to true and not add a completion date with priority present', (g) => {
+    it('should be able to set completed to true and not add a completion date with priority present', () => {
       const input = '(A) meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const todo = todotxt.TodoModel.parse(input);
       const newTodo = todo.setCompleted(true, false);
@@ -128,7 +128,7 @@ describe('todotxt', () => {
       expect(newTodo.id).toBe(todo.id);
     });
 
-    it('should be able to set completed to true and not add a completion date with creation date', (g) => {
+    it('should be able to set completed to true and not add a completion date with creation date', () => {
       const input = '2023-01-01 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const todo = todotxt.TodoModel.parse(input);
       const newTodo = todo.setCompleted(true, false);
@@ -138,7 +138,7 @@ describe('todotxt', () => {
     });
 
     // eslint-disable-next-line max-len
-    it('should be able to set completed to true and not add a completion date without priority or creation date', (g) => {
+    it('should be able to set completed to true and not add a completion date without priority or creation date', () => {
       const input = 'meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const todo = todotxt.TodoModel.parse(input);
       const newTodo = todo.setCompleted(true, false);
@@ -148,7 +148,7 @@ describe('todotxt', () => {
     });
 
     // eslint-disable-next-line max-len
-    it('should be able to set a creation date if completion, priority and completion date are present', (g) => {
+    it('should be able to set a creation date if completion, priority and completion date are present', () => {
       const input = 'x (A) 2023-04-16 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const todo = todotxt.TodoModel.parse(input);
       const newTodo = todo.setCreationDate();
@@ -157,7 +157,7 @@ describe('todotxt', () => {
       expect(newTodo.raw).toBe(raw);
     });
 
-    it('should be able to set a creation date if completion and completion date are present', (g) => {
+    it('should be able to set a creation date if completion and completion date are present', () => {
       const input = 'x 2023-04-16 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const todo = todotxt.TodoModel.parse(input);
       const newTodo = todo.setCreationDate();
@@ -166,7 +166,7 @@ describe('todotxt', () => {
       expect(newTodo.raw).toBe(raw);
     });
 
-    it('should be able to set a creation date if priority is present', (g) => {
+    it('should be able to set a creation date if priority is present', () => {
       const input = '(A) meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const todo = todotxt.TodoModel.parse(input);
       const newTodo = todo.setCreationDate();
@@ -174,14 +174,14 @@ describe('todotxt', () => {
       expect(newTodo.raw).toBe('(A) 2023-04-13 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456');
     });
 
-    it('should be able to return as string', (g) => {
+    it('should be able to return as string', () => {
       const input = 'x (A) 2021-01-01 2021-01-02 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const todo = todotxt.TodoModel.parse(input);
       const todoString = todo.toString();
       expect(todoString).toBe(input);
     });
 
-    it('should be able to return todo as JSON', (g) => {
+    it('should be able to return todo as JSON', () => {
       const input = 'x (A) 2021-01-02 2021-01-01 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const todo = todotxt.TodoModel.parse(input);
       const todoJSON = JSON.stringify(todo);
@@ -192,29 +192,29 @@ describe('todotxt', () => {
   });
 
   describe('TodoListModel', () => {
-    it('should be able to add todos', (g) => {
+    it('should be able to add todos', () => {
       const inputA = 'x (A) 2021-01-01 2021-01-02 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const inputB = 'meow';
       const list = new todotxt.TodoListModel([], '\n');
       const listA = list.addTodo(inputA);
       const listB = listA.addTodo(inputB);
       expect(listB.todos.length).toBe(2);
-      expect(listB.todos[0].raw).toBe(inputA);
-      expect(listB.todos[1].raw).toBe(`2023-04-13 ${inputB}`);
+      expect(listB.todos[0].raw).toBe(`2023-04-13 ${inputB}`);
+      expect(listB.todos[1].raw).toBe(inputA);
     });
 
-    it('should be able to add todos without a creation date', (g) => {
+    it('should be able to add todos without a creation date', () => {
       const inputA = 'x (A) 2021-01-01 2021-01-02 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const inputB = 'meow';
       const list = new todotxt.TodoListModel([], '\n');
       const listA = list.addTodo(inputA);
       const listB = listA.addTodo(inputB, false);
       expect(listB.todos.length).toBe(2);
-      expect(listB.todos[0].raw).toBe(inputA);
-      expect(listB.todos[1].raw).toBe(inputB);
+      expect(listB.todos[0].raw).toBe(inputB);
+      expect(listB.todos[1].raw).toBe(inputA);
     });
 
-    it('should be able to show state', (g) => {
+    it('should be able to show state', () => {
       const inputA = 'x (A) 2021-01-01 2021-01-02 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const inputB = 'meow';
       const list = new todotxt.TodoListModel([], '\n');
@@ -225,7 +225,7 @@ describe('todotxt', () => {
       expect(listB.show(VIEW_STATES.ACTIVE).length).toBe(1);
     });
 
-    it('should be able to remove todos', (g) => {
+    it('should be able to remove todos', () => {
       const inputA = 'x (A) 2021-01-01 2021-01-02 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       // eslint-disable-next-line max-len
       const inputB = 'x (A) 2021-01-01 2021-01-02 yinkel @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
@@ -239,8 +239,9 @@ describe('todotxt', () => {
       expect(listD.todos[0].raw).toBe(`2023-04-13 ${inputC}`);
     });
 
-    it('should be able to edit todos', (g) => {
-      const inputA = 'x (A) 2021-01-01 2021-01-02 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
+    it('should be able to edit todos', () => {
+      // eslint-disable-next-line max-len
+      const inputA = 'x (A) 2021-01-01 2021-01-02 girpel @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       // eslint-disable-next-line max-len
       const inputB = 'x (A) 2021-01-01 2021-01-02 yinkel @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const inputC = 'x (B) 2021-01-01 2021-01-02 meow';
@@ -252,10 +253,10 @@ describe('todotxt', () => {
       expect(listD.todos.length).toBe(3);
       expect(listD.todos[0].raw).toBe('meow');
       expect(listD.todos[1].raw).toBe(inputB);
-      expect(listD.todos[2].raw).toBe(inputC);
+      expect(listD.todos[2].raw).toBe(inputA);
     });
 
-    it('should be able to set a todo to completed', (g) => {
+    it('should be able to set a todo to completed', () => {
       const todoA = '(A) Thank Mom for the meatballs @phone';
       const todoB = '(B) Schedule Goodwill pickup +GarageSale @phone';
       const todoC = 'Post signs around the neighborhood +GarageSale';
@@ -266,7 +267,7 @@ describe('todotxt', () => {
       expect(listC.todos[2].raw).toBe('x (A) Thank Mom for the meatballs @phone');
     });
 
-    it('should be able set a todo to not completed', (g) => {
+    it('should be able set a todo to not completed', () => {
       const todoA = '(A) Thank Mom for the meatballs @phone';
       const todoB = '(B) Schedule Goodwill pickup +GarageSale @phone';
       const todoC = 'x Post signs around the neighborhood +GarageSale';
@@ -278,7 +279,7 @@ describe('todotxt', () => {
       expect(listC.todos[2].raw).toBe('(A) Eat da spaghetti @phone');
     });
 
-    it('should be able to convert to string', (g) => {
+    it('should be able to convert to string', () => {
       const inputA = 'x (A) 2021-01-01 2021-01-02 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       // eslint-disable-next-line max-len
       const inputB = 'x (A) 2021-01-01 2021-01-02 yinkel @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
@@ -288,10 +289,10 @@ describe('todotxt', () => {
       const listB = listA.addTodo(inputB);
       const listC = listB.addTodo(inputC);
       const listString = listC.toString();
-      expect(listString).toBe(`${inputA}\n${inputB}\n${inputC}\n`);
+      expect(listString).toBe(`${inputC}\n${inputB}\n${inputA}\n`);
     });
 
-    it('should be able to add multiple todos at once, adding a creation date', (g) => {
+    it('should be able to add multiple todos at once, adding a creation date', () => {
       const inputA = 'meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const inputB = 'yinkel @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const inputC = 'x meow';
@@ -303,7 +304,7 @@ describe('todotxt', () => {
       expect(listA.todos[2].raw).toBe('x 2023-04-13 meow');
     });
 
-    it('should be able to add multiple todos at once, without adding a creation date', (g) => {
+    it('should be able to add multiple todos at once, without adding a creation date', () => {
       const inputA = 'meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const inputB = 'yinkel @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const inputC = 'x meow';
@@ -315,22 +316,22 @@ describe('todotxt', () => {
       expect(listA.todos[2].raw).toBe(inputC);
     });
 
-    it('should be able to add multiple todos in a list that already has them', (g) => {
+    it('should be able to add multiple todos in a list that already has them', () => {
       const inputA = 'meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const inputB = 'yinkel @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
       const inputC = 'x meow';
       const inputD = 'x (A) 2023-04-13 2023-04-13 meow';
       const list = new todotxt.TodoListModel([], '\n');
-      const listA = list.addTodo(inputA);
-      const listB = listA.addTodos([inputB, inputC, inputD]);
+      const listA = list.addTodo(inputA, false);
+      const listB = listA.addTodos([inputB, inputC, inputD], false);
       expect(listB.todos.length).toBe(4);
-      expect(listB.todos[0].raw).toBe(`2023-04-13 ${inputA}`);
-      expect(listB.todos[1].raw).toBe(`2023-04-13 ${inputB}`);
-      expect(listB.todos[2].raw).toBe('x 2023-04-13 meow');
-      expect(listB.todos[3].raw).toBe(inputD);
+      expect(listB.todos[0].raw).toBe(inputB);
+      expect(listB.todos[1].raw).toBe(inputC);
+      expect(listB.todos[2].raw).toBe(inputD);
+      expect(listB.todos[3].raw).toBe(inputA);
     });
 
-    it('should be able to import todos from a file with \'\n\' line endings', (g) => {
+    it('should be able to import todos from a file with \'\n\' line endings', () => {
       // eslint-disable-next-line max-len
       const input = '(A) Thank Mom for the meatballs @phone\n(B) Schedule Goodwill pickup +GarageSale @phone\nPost signs around the neighborhood +GarageSale @GroceryStore Eskimo pies';
       const list = new todotxt.TodoListModel([], '\n');
@@ -341,7 +342,7 @@ describe('todotxt', () => {
       expect(listA.todos[2].raw).toBe('Post signs around the neighborhood +GarageSale @GroceryStore Eskimo pies');
     });
 
-    it('should to able import todos from a file with \'\n\' line endings and a trailing newline', (g) => {
+    it('should to able import todos from a file with \'\n\' line endings and a trailing newline', () => {
       // eslint-disable-next-line max-len
       const input = '(A) Thank Mom for the meatballs @phone\n(B) Schedule Goodwill pickup +GarageSale @phone\nPost signs around the neighborhood +GarageSale @GroceryStore Eskimo pies\n';
       const list = new todotxt.TodoListModel([], '\n');
@@ -352,7 +353,7 @@ describe('todotxt', () => {
       expect(listA.todos[2].raw).toBe('Post signs around the neighborhood +GarageSale @GroceryStore Eskimo pies');
     });
 
-    it('should be able to import todos from a file with \'\r\n\' line endings', (g) => {
+    it('should be able to import todos from a file with \'\r\n\' line endings', () => {
       // eslint-disable-next-line max-len
       const input = '(A) Thank Mom for the meatballs @phone\r\n(B) Schedule Goodwill pickup +GarageSale @phone\r\nPost signs around the neighborhood +GarageSale @GroceryStore Eskimo pies';
       const list = new todotxt.TodoListModel([], '\r\n');
@@ -363,7 +364,7 @@ describe('todotxt', () => {
       expect(listA.todos[2].raw).toBe('Post signs around the neighborhood +GarageSale @GroceryStore Eskimo pies');
     });
 
-    it('should be able to import todos from a file with \'\r\n\' line endings and a trailing newline', (g) => {
+    it('should be able to import todos from a file with \'\r\n\' line endings and a trailing newline', () => {
       // eslint-disable-next-line max-len
       const input = '(A) Thank Mom for the meatballs @phone\r\n(B) Schedule Goodwill pickup +GarageSale @phone\r\nPost signs around the neighborhood +GarageSale @GroceryStore Eskimo pies\r\n';
       const list = new todotxt.TodoListModel([], '\r\n');
@@ -375,7 +376,7 @@ describe('todotxt', () => {
     });
   });
 
-  it('should be able to remove a todo when only one is present', (g) => {
+  it('should be able to remove a todo when only one is present', () => {
     const input = 'x (A) 2021-01-02 2021-01-01 meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
     const todo = todotxt.TodoModel.parse(input);
     const todoList = new todotxt.TodoListModel([todo], '\n');
@@ -383,7 +384,7 @@ describe('todotxt', () => {
     expect(newTodoList.todos.length).toBe(0);
   });
 
-  it('should be able to remove a todo when multiple todos are present', (g) => {
+  it('should be able to remove a todo when multiple todos are present', () => {
     const inputA = 'meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
     const inputB = 'yinkel @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
     const inputC = 'x meow';
@@ -394,7 +395,7 @@ describe('todotxt', () => {
     expect(newList.todos.length).toBe(3);
   });
 
-  it('should be able to clear todos', (g) => {
+  it('should be able to clear todos', () => {
     const inputA = 'meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
     const inputB = 'yinkel @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
     const inputC = 'x meow';
@@ -404,12 +405,12 @@ describe('todotxt', () => {
     expect(newList.todos.length).toBe(0);
   });
 
-  it('should return isEmpty as true if there are no todos', (g) => {
+  it('should return isEmpty as true if there are no todos', () => {
     const list = new todotxt.TodoListModel([], '\n');
     expect(list.isEmpty).toBe(true);
   });
 
-  it('should return isEmpty as false if there are todos', (g) => {
+  it('should return isEmpty as false if there are todos', () => {
     const inputA = 'meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
     const inputB = 'yinkel @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
     const inputC = 'x meow';
