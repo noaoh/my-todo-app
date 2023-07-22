@@ -1,6 +1,5 @@
 import FileSaver from 'file-saver';
 import { Grid, TextField, Button, Select, MenuItem } from '@mui/material';
-import { TodoHistoryModel } from './models/todotxt';
 import { useWindowWidth } from './hooks/useWindowWidth';
 import { useAtom, useAtomValue } from 'jotai';
 import { VIEW_STATES } from './constants'
@@ -88,12 +87,16 @@ function App() {
               <Button style={{ backgroundColor: '#F5F7FA', color: '#F9703E' }} variant="contained" onClick={exportTodos}>Export</Button>
           </Grid>
         )}
-        <Grid item>
-          <Button style={{ backgroundColor: '#F9703E', color: 'white' }} variant="contained" onClick={onUndo}>Undo</Button>
-        </Grid>
-        <Grid item>
-          <Button style={{ backgroundColor: '#F9703E', color: 'white' }} variant="contained" onClick={onRedo}>Redo</Button>
-        </Grid>
+        {todosHistory.length === 1 || todosHistory.pos === 0 ? null : (
+          <Grid item>
+            <Button style={{ backgroundColor: '#F9703E', color: 'white' }} variant="contained" onClick={onUndo}>Undo</Button>
+          </Grid>
+        )}
+        {todosHistory.length === 1 || todosHistory.pos === (todosHistory.length - 1) ? null : (
+          <Grid item>
+            <Button style={{ backgroundColor: '#F9703E', color: 'white' }} variant="contained" onClick={onRedo}>Redo</Button>
+          </Grid>
+        )}
         <Grid item>
           <Settings />
         </Grid>

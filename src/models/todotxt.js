@@ -229,6 +229,10 @@ class TodoHistoryModel {
     return this.history.length;
   }
 
+  get noHistory() {
+    return this.length === 1;
+  }
+
   addState(todos) {
     const state = todos.toJSON();
     if (this.length === this.historyLimit) {

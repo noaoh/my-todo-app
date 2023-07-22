@@ -424,6 +424,7 @@ describe('TodoHistoryModel', () => {
     const h = new todotxt.TodoHistoryModel();
     expect(h.length).toBe(1);
     expect(h.pos).toBe(0)
+    expect(h.noHistory).toBe(true);
     expect(h.history).toStrictEqual([{ todos: []}])
   })
 
@@ -435,6 +436,7 @@ describe('TodoHistoryModel', () => {
     expect(h2.length).toBe(2);
     expect(h2.pos).toBe(1);
     expect(h2.history[h2.pos]).toStrictEqual(list.toJSON());
+    expect(h2.noHistory).toBe(false);
   });
 
   it('should show the current state when pos is 0', () => {
