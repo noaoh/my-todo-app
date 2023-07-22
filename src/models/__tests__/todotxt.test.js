@@ -509,12 +509,11 @@ describe('TodoHistoryModel', () => {
 
   it('should keep 10 states in history', () => {
     const inputs = [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '10' ];
-    let h = new todotxt.TodoHistoryModel();
-    let list = new todotxt.TodoListModel([], osLineEnding);
-    inputs.forEach((input) => {
-      list = list.addTodo(input, false);
-      h = h.addState(list);
-    });
+    let { list, h } = inputs.reduce((acc, input) => {
+      acc.list = acc.list.addTodo(input, false);
+      acc.h = acc.h.addState(acc.list);
+      return acc;
+    }, { list: new todotxt.TodoListModel([], osLineEnding), h: new todotxt.TodoHistoryModel() });
     expect(list.length).toBe(10);
     expect(h.length).toBe(10);
     expect(h.pos).toBe(9);
