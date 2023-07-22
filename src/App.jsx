@@ -1,17 +1,18 @@
 import FileSaver from 'file-saver';
 import { Grid, TextField, Button, Select, MenuItem } from '@mui/material';
-import { TodoModel, TodoListModel } from './models/todotxt';
+import { TodoHistoryModel } from './models/todotxt';
 import { useWindowWidth } from './hooks/useWindowWidth';
 import { useAtom, useAtomValue } from 'jotai';
 import { VIEW_STATES } from './constants'
 import { TodoList } from './components/todoList';
 import { FileImport } from './components/fileInput';
 import { Settings } from './components/settings';
-import { addCreationDateAtom, currentTodoAtom, searchQueryAtom, showStateAtom, todosModelAtom, todoListIsEmptyAtom } from './atoms';
+import { addCreationDateAtom, currentTodoAtom, searchQueryAtom, showStateAtom, todosModelAtom, todosHistoryAtom, todoListIsEmptyAtom } from './atoms';
 import { Header } from './components/header';
 
 function App() {
   const [todosModel, setTodosModel] = useAtom(todosModelAtom);
+  const [todosHistory, setTodosHistory] = useAtom(todosHistoryAtom);
   const [currentTodo, setCurrentTodo] = useAtom(currentTodoAtom);
   const [showState, setShowState] = useAtom(showStateAtom);
   const addCreationDate = useAtomValue(addCreationDateAtom);
@@ -23,6 +24,8 @@ function App() {
     if (currentTodo.length !== 0) {
       const newTodos = todosModel.addTodo(currentTodo, addCreationDate);
       setTodosModel(newTodos);
+      const newHistory = todosHistory.addState(newTodos);
+      setTodosHistory(newHistory);
       setCurrentTodo('');
     }
   }
@@ -35,12 +38,36 @@ function App() {
 
   function onRemoveTodos() {
     const newTodos = todosModel.removeCompleted();
-    setTodosModel(newTodos);
+    if (newTodos.length !== todosModel.length) {
+      setTodosModel(newTodos);
+      const newHistory = todosHistory.addState(newTodos);
+      setTodosHistory(newHistory);
+    }
   }
 
   function onClearTodos() {
     const newTodos = todosModel.clearTodos();
     setTodosModel(newTodos);
+    const newHistory = todosHistory.addState(newTodos);
+    setTodosHistory(newHistory);
+  }
+
+  function onUndo() {
+    const previousState = todosHistory.undo();
+    if (previousState.pos >= 0) {
+      setTodosHistory(previousState);
+      const previousTodoList = previousState.toTodoListModel();
+      setTodosModel(previousTodoList);
+    }
+  }
+
+  function onRedo() {
+    const nextState = todosHistory.redo();
+    if (nextState.pos !== todosHistory.length) {
+      setTodosHistory(nextState);
+      const nextTodoList = nextState.toTodoListModel();
+      setTodosModel(nextTodoList);
+    }
   }
 
   function exportTodos() {
@@ -61,6 +88,12 @@ function App() {
               <Button style={{ backgroundColor: '#F5F7FA', color: '#F9703E' }} variant="contained" onClick={exportTodos}>Export</Button>
           </Grid>
         )}
+        <Grid item>
+          <Button style={{ backgroundColor: '#F9703E', color: 'white' }} variant="contained" onClick={onUndo}>Undo</Button>
+        </Grid>
+        <Grid item>
+          <Button style={{ backgroundColor: '#F9703E', color: 'white' }} variant="contained" onClick={onRedo}>Redo</Button>
+        </Grid>
         <Grid item>
           <Settings />
         </Grid>

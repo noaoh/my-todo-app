@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Button, TextField } from '@mui/material';
 import { useAtom } from 'jotai';
-import { todosModelAtom } from '../atoms';
+import { todosModelAtom, todosHistoryAtom } from '../atoms';
 
 function FileImport() {
   const [todosModel, setTodosModel] = useAtom(todosModelAtom);
+  const [todosHistory, setTodosHistory] = useAtom(todosHistoryAtom);
   const [selectedFile, setSelectedFile] = useState(null);
 
   const handleFileChange = (event) => {
@@ -20,6 +21,8 @@ function FileImport() {
         const contents = e.target.result;
         const newTodos = todosModel.importTodos(contents);
         setTodosModel(newTodos);
+        const newHistory = todosHistory.addState(newTodos);
+        setTodosHistory(newHistory);
       };
       reader.readAsText(file);
       setSelectedFile(null);

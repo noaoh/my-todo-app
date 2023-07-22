@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Box, Checkbox, TextField, Button } from '@mui/material';
 import { useAtom, useAtomValue } from 'jotai';
-import { todosModelAtom, addCompletionDateAtom } from '../atoms';
+import { todosModelAtom, todosHistoryAtom, addCompletionDateAtom } from '../atoms';
 import { useWindowWidth } from '../hooks/useWindowWidth';
 
 function TodoItem(props) {
   const [todosModel, setTodosModel] = useAtom(todosModelAtom);
+  const [todosHistory, setTodosHistory] = useAtom(todosHistoryAtom);
   const addCompletionDate = useAtomValue(addCompletionDateAtom);
   const [focus, setFocus] = useState(false);
   const windowWidth = useWindowWidth();
@@ -14,6 +15,8 @@ function TodoItem(props) {
   function onTodoCheckboxChange(id) {
     const newTodos = todosModel.toggleTodo(id, addCompletionDate);
     setTodosModel(newTodos);
+    const newHistory = todosHistory.addState(newTodos);
+    setTodosHistory(newHistory);
   }
 
   function onTodoTextInputChange(id, text) {
@@ -24,6 +27,8 @@ function TodoItem(props) {
   function onDeleteTodo(id) {
     const newTodos = todosModel.removeTodo(id);
     setTodosModel(newTodos);
+    const newHistory = todosHistory.addState(newTodos);
+    setTodosHistory(newHistory);
   }
 
   function onDeleteKeyOrBackspace(e, text, id) {

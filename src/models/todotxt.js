@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { format, startOfToday } from 'date-fns';
-import { MATCH_TYPES, VIEW_STATES, osLineEnding } from '../constants';
+import { HISTORY_LIMIT, MATCH_TYPES, VIEW_STATES, osLineEnding } from '../constants';
 import { findMatch, parseTodoTxt } from './parser';
 
 const isoTodayDate = () => format(startOfToday(), 'yyyy-MM-dd');
@@ -222,6 +222,7 @@ class TodoHistoryModel {
   constructor(history, pos) {
     this.history = history || [{ todos: [] }];
     this.pos = pos || 0;
+    this.historyLimit = HISTORY_LIMIT;
   }
 
   get length() {
@@ -230,9 +231,15 @@ class TodoHistoryModel {
 
   addState(todos) {
     const state = todos.toJSON();
-    const history = [...this.history, { ...state }];
-    const pos = this.pos + 1;
-    return new TodoHistoryModel(history, pos);
+    if (this.length === this.historyLimit) {
+      const history = [...this.history.slice(1), { ...state }];
+      const pos = this.pos;
+      return new TodoHistoryModel(history, pos);
+    } else {
+      const history = [...this.history, { ...state }];
+      const pos = this.pos + 1;
+      return new TodoHistoryModel(history, pos);
+    }
   }
 
   currentState() {
@@ -248,17 +255,24 @@ class TodoHistoryModel {
   }
 
   redo() {
-    if (this.pos === this.history.length - 1) {
+    if (this.pos === this.length - 1) {
       return this;
     }
     const pos = this.pos + 1;
     return new TodoHistoryModel(this.history, pos);
   }
 
-  toTodoModelList() {
+  toTodoListModel() {
     const { todos } = this.currentState();
     const todoList = todos.map((todo) => new TodoModel(todo));
     return new TodoListModel(todoList, osLineEnding);
+  }
+
+  toJSON() {
+    return {
+      history: this.history,
+      pos: this.pos,
+    };
   }
 }
 

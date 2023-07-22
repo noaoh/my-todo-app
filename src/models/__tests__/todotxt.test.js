@@ -491,7 +491,7 @@ describe('TodoHistoryModel', () => {
   it('should be able to convert the current state to a TodoListModel when pos is 0', () => {
     const emptyTodoListModel = new todotxt.TodoListModel([], osLineEnding);
     const h = new todotxt.TodoHistoryModel();
-    const list = h.toTodoModelList();
+    const list = h.toTodoListModel();
     expect(list).toStrictEqual(emptyTodoListModel);
   });
 
@@ -500,7 +500,22 @@ describe('TodoHistoryModel', () => {
     const list = new todotxt.TodoListModel([], osLineEnding).addTodos([inputA], false);
     const h = new todotxt.TodoHistoryModel();
     const h2 = h.addState(list);
-    const fromHistoryList = h2.toTodoModelList();
+    const fromHistoryList = h2.toTodoListModel();
     expect(fromHistoryList).toStrictEqual(list);
+  });
+
+  it('should keep 10 states in history', () => {
+    const inputs = [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '10' ];
+    let h = new todotxt.TodoHistoryModel();
+    let list = new todotxt.TodoListModel([], osLineEnding);
+    inputs.forEach((input) => {
+      list = list.addTodo(input, false);
+      h = h.addState(list);
+    });
+    expect(list.length).toBe(10);
+    expect(h.length).toBe(10);
+    expect(h.pos).toBe(9);
+    expect(h.history[0].todos.length).toBe(1);
+    expect(h.history[9].todos.length).toBe(10);
   });
 });

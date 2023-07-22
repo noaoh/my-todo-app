@@ -38,6 +38,8 @@ const onlyOneMatchTypes = [
 
 const osLineEnding = getOsLineEnding();
 
+const HISTORY_LIMIT = 10;
+
 export {
-  onlyOneMatchTypes, initialTodoState, VIEW_STATES, MATCH_TYPES, osLineEnding,
+  onlyOneMatchTypes, initialTodoState, VIEW_STATES, MATCH_TYPES, osLineEnding, HISTORY_LIMIT,
 };

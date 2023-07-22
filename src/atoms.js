@@ -2,7 +2,7 @@ import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { filter as filterFuzzy } from 'fuzzy-tools';
 import { VIEW_STATES, osLineEnding } from './constants';
-import { TodoListModel, TodoModel } from './models/todotxt';
+import { TodoListModel, TodoModel, TodoHistoryModel } from './models/todotxt';
 
 const currentTodoAtom = atomWithStorage('currentTodo', '');
 
@@ -31,6 +31,22 @@ const todosModelAtom = atomWithStorage('todosModel', new TodoListModel([], osLin
   },
 });
 
+const todosHistoryAtom = atomWithStorage('todosHistory', [], {
+  getItem: (key) => {
+    const storedValue = localStorage.getItem(key);
+    if (storedValue === null) {
+      return new TodoHistoryModel();
+    } else {
+      const parsedValue = JSON.parse(storedValue);
+      const { history, pos } = parsedValue;
+      return new TodoHistoryModel(history, pos);
+    }
+  },
+  setItem: (key, newValue) => {
+    localStorage.setItem(key, JSON.stringify(newValue));
+  }
+});
+
 const filteredTodosAtom = atom((get) => {
   const todosModel = get(todosModelAtom);
   const searchQuery = get(searchQueryAtom);
@@ -51,5 +67,5 @@ const todoListIsEmptyAtom = atom((get) => {
 
 /* eslint-disable max-len */
 export {
-  currentTodoAtom, searchQueryAtom, addCreationDateAtom, addCompletionDateAtom, showStateAtom, todosModelAtom, filteredTodosAtom, todoListIsEmptyAtom,
+  currentTodoAtom, searchQueryAtom, addCreationDateAtom, addCompletionDateAtom, showStateAtom, todosModelAtom, filteredTodosAtom, todoListIsEmptyAtom, todosHistoryAtom,
 };
