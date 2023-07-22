@@ -1,4 +1,4 @@
-import { getOsLineEnding } from "./utils";
+import { getOsLineEnding } from './utils';
 
 const VIEW_STATES = {
   ALL: 'all',

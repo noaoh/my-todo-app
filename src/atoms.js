@@ -19,12 +19,11 @@ const todosModelAtom = atomWithStorage('todosModel', new TodoListModel([], osLin
     const storedValue = localStorage.getItem(key);
     if (storedValue === null) {
       return new TodoListModel([], osLineEnding);
-    } else {
-      const parsedValue = JSON.parse(storedValue);
-      const { todos } = parsedValue;
-      const todoList = todos.map((todo) => new TodoModel(todo));
-      return new TodoListModel(todoList, osLineEnding);
     }
+    const parsedValue = JSON.parse(storedValue);
+    const { todos } = parsedValue;
+    const todoList = todos.map((todo) => new TodoModel(todo));
+    return new TodoListModel(todoList, osLineEnding);
   },
   setItem: (key, newValue) => {
     localStorage.setItem(key, JSON.stringify(newValue));
@@ -36,15 +35,14 @@ const todosHistoryAtom = atomWithStorage('todosHistory', [], {
     const storedValue = localStorage.getItem(key);
     if (storedValue === null) {
       return new TodoHistoryModel();
-    } else {
-      const parsedValue = JSON.parse(storedValue);
-      const { history, pos } = parsedValue;
-      return new TodoHistoryModel(history, pos);
     }
+    const parsedValue = JSON.parse(storedValue);
+    const { history, pos } = parsedValue;
+    return new TodoHistoryModel(history, pos);
   },
   setItem: (key, newValue) => {
     localStorage.setItem(key, JSON.stringify(newValue));
-  }
+  },
 });
 
 const filteredTodosAtom = atom((get) => {
@@ -53,11 +51,10 @@ const filteredTodosAtom = atom((get) => {
   const showState = get(showStateAtom);
   if (searchQuery === '') {
     return todosModel.show(showState);
-  } else {
-    return filterFuzzy(searchQuery, todosModel.show(showState), {
-      name: 'raw',
-    });
   }
+  return filterFuzzy(searchQuery, todosModel.show(showState), {
+    name: 'raw',
+  });
 });
 
 const todoListIsEmptyAtom = atom((get) => {

@@ -1,6 +1,6 @@
 import FileSaver from 'file-saver';
 import { Grid, TextField, Button, Select, MenuItem } from '@mui/material';
-import { useWindowWidth } from './hooks/useWindowWidth';
+import useWindowWidth from './hooks/useWindowWidth';
 import { useAtom, useAtomValue } from 'jotai';
 import { VIEW_STATES } from './constants'
 import { TodoList } from './components/todoList';

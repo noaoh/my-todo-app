@@ -1,5 +1,5 @@
 import {
-  beforeEach, afterEach, describe, it, vi, expect
+  beforeEach, afterEach, describe, it, vi, expect,
 } from 'vitest';
 import * as todotxt from '../todotxt';
 import { VIEW_STATES, osLineEnding } from '../../constants';
@@ -271,7 +271,7 @@ describe('todotxt', () => {
       const todoA = '(A) Thank Mom for the meatballs @phone';
       const todoB = '(B) Schedule Goodwill pickup +GarageSale @phone';
       const todoC = 'x Post signs around the neighborhood +GarageSale';
-      const todoD = 'x (A) Eat da spaghetti @phone'
+      const todoD = 'x (A) Eat da spaghetti @phone';
       const listA = new todotxt.TodoListModel([], '\n');
       const listB = listA.addTodos([todoA, todoB, todoC, todoD]);
       const listC = listB.toggleTodo(listB.todos[3].id, false);
@@ -424,10 +424,10 @@ describe('TodoHistoryModel', () => {
   it('should initialize properly', () => {
     const h = new todotxt.TodoHistoryModel();
     expect(h.length).toBe(1);
-    expect(h.pos).toBe(0)
+    expect(h.pos).toBe(0);
     expect(h.noHistory).toBe(true);
-    expect(h.history).toStrictEqual([{ todos: []}])
-  })
+    expect(h.history).toStrictEqual([{ todos: [] }]);
+  });
 
   it('should be able to add a todotxt state', () => {
     const inputA = 'meow @test3 +test1 asdf +test4 @test5 +test6 sdf test1:123 test2:456';
@@ -508,8 +508,8 @@ describe('TodoHistoryModel', () => {
   });
 
   it('should keep 10 states in history', () => {
-    const inputs = [ '1', '2', '3', '4', '5', '6', '7', '8', '9', '10' ];
-    let { list, h } = inputs.reduce((acc, input) => {
+    const inputs = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+    const { list, h } = inputs.reduce((acc, input) => {
       acc.list = acc.list.addTodo(input, false);
       acc.h = acc.h.addState(acc.list);
       return acc;

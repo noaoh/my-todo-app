@@ -12,4 +12,5 @@ module.exports = {
     ["max-len"]: ["error", { "code": 120 }],
     "max-classes-per-file": "off",
   },
+  ignorePatterns: ['dist', 'node_modules'],
 };

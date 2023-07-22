@@ -18,4 +18,4 @@ function useWindowWidth() {
   return windowWidth;
 }
 
-export { useWindowWidth };
+export default useWindowWidth;

@@ -8,9 +8,9 @@ function getOsLineEnding() {
   // This matters for the output of our todo.txt file
   if (isUNIX() || isMacOS() || isLinux() || isIOS() || isAndroid()) {
     return '\n';
-  } else {
-    return '\r\n';
   }
+  return '\r\n';
 }
 
+// eslint-disable-next-line import/prefer-default-export
 export { getOsLineEnding };

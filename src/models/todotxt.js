@@ -1,6 +1,8 @@
 import { v4 as uuid } from 'uuid';
 import { format, startOfToday } from 'date-fns';
-import { HISTORY_LIMIT, MATCH_TYPES, VIEW_STATES, osLineEnding } from '../constants';
+import {
+  HISTORY_LIMIT, MATCH_TYPES, VIEW_STATES, osLineEnding,
+} from '../constants';
 import { findMatch, parseTodoTxt } from './parser';
 
 const isoTodayDate = () => format(startOfToday(), 'yyyy-MM-dd');
@@ -67,12 +69,11 @@ class TodoModel {
         return new TodoModel({
           ...this, completionDate, completed: completeValue, raw: newRaw,
         });
-      } else {
-        const newRaw = tokens.join(' ');
-        return new TodoModel({
-          ...this, completed: completeValue, raw: newRaw,
-        });
       }
+      const newRaw = tokens.join(' ');
+      return new TodoModel({
+        ...this, completed: completeValue, raw: newRaw,
+      });
     } if (completeValue === false) {
       const states = [MATCH_TYPES.COMPLETED, MATCH_TYPES.COMPLETION_DATE];
       const tokens = this.raw.split(' ');
@@ -141,12 +142,11 @@ class TodoListModel {
     if (showState === VIEW_STATES.ACTIVE) {
       const result = this.todos.filter((todo) => todo.completed === false);
       return result;
-    } else if (showState === VIEW_STATES.COMPLETED) {
+    } if (showState === VIEW_STATES.COMPLETED) {
       const result = this.todos.filter((todo) => todo.completed === true);
       return result;
-    } else {
-      return this.todos;
     }
+    return this.todos;
   }
 
   removeCompleted() {
@@ -175,17 +175,16 @@ class TodoListModel {
   }
 
   toggleTodo(id, addCompletionDate = true) {
-    const todo = this.todos.find((todo) => todo.id === id);
+    const todo = this.todos.find((t) => t.id === id);
     if (todo.completed === false) {
       return this.setTodoCompleted(todo, addCompletionDate);
-    } else {
-      return this.setTodoNotCompleted(todo);
     }
+    return this.setTodoNotCompleted(todo);
   }
 
   setTodoCompleted(todo, addCompletionDate) {
     const completedTodo = todo.setCompleted(true, addCompletionDate);
-    const withoutCompletedTodo = this.todos.filter((t) => t.id !== todo.id); 
+    const withoutCompletedTodo = this.todos.filter((t) => t.id !== todo.id);
     const newList = [...withoutCompletedTodo, completedTodo];
     return new TodoListModel(newList, this.lineEnding);
   }
@@ -193,7 +192,7 @@ class TodoListModel {
   setTodoNotCompleted(todo) {
     const notCompletedTodo = todo.setCompleted(false);
     const withoutNotCompletedTodo = this.todos.filter((t) => t.id !== todo.id);
-    const lastNotCompletedTodoIndex = withoutNotCompletedTodo.findLastIndex((todo) => todo.completed === false);
+    const lastNotCompletedTodoIndex = withoutNotCompletedTodo.findLastIndex((t) => t.completed === false);
     const todosBeforeLastNotCompletedTodo = withoutNotCompletedTodo.slice(0, lastNotCompletedTodoIndex + 1);
     const todosAfterLastNotCompletedTodo = withoutNotCompletedTodo.slice(lastNotCompletedTodoIndex + 1);
     const newList = [...todosBeforeLastNotCompletedTodo, notCompletedTodo, ...todosAfterLastNotCompletedTodo];
@@ -238,13 +237,12 @@ class TodoHistoryModel {
     const state = todos.toJSON();
     if (this.length === this.historyLimit) {
       const history = [...this.history.slice(1), { ...state }];
-      const pos = this.pos;
-      return new TodoHistoryModel(history, pos);
-    } else {
-      const history = [...this.history, { ...state }];
-      const pos = this.pos + 1;
+      const { pos } = this;
       return new TodoHistoryModel(history, pos);
     }
+    const history = [...this.history, { ...state }];
+    const pos = this.pos + 1;
+    return new TodoHistoryModel(history, pos);
   }
 
   currentState() {
@@ -281,4 +279,6 @@ class TodoHistoryModel {
   }
 }
 
-export { isoTodayDate, TodoModel, TodoListModel, TodoHistoryModel };
+export {
+  isoTodayDate, TodoModel, TodoListModel, TodoHistoryModel,
+};
